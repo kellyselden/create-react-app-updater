@@ -1,0 +1,148 @@
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const utils = require('./utils');
+const denodeify = require('denodeify');
+const tmpDir = denodeify(require('tmp').dir);
+const rimraf = denodeify(require('rimraf'));
+const cpr = path.resolve(path.dirname(require.resolve('cpr')), '../bin/cpr');
+const symlinkOrCopySync = require('symlink-or-copy').sync;
+const readFile = denodeify(fs.readFile);
+const writeFile = denodeify(fs.writeFile);
+
+function mutatePackageJson(cwd, callback) {
+  let filePath = path.join(cwd, 'package.json');
+  return readFile(filePath).then(file => {
+    let pkg = JSON.parse(file);
+    callback(pkg);
+    file = JSON.stringify(pkg, null, 2);
+    return writeFile(filePath, file);
+  });
+}
+
+module.exports = function getStartAndEndCommands({
+  projectName,
+  startVersion,
+  endVersion
+}) {
+  // test
+  // utils.run('npm i react-scripts@1.0.0 --no-save --no-package-lock');
+  // utils.run('npm i -g react-scripts');
+
+  return Promise.all([
+    module.exports.createCommand(projectName, startVersion),
+    module.exports.createCommand(projectName, endVersion)
+  ]).then(([
+    startCommand,
+    endCommand
+  ]) => ({
+    startCommand,
+    endCommand
+  }));
+};
+
+function getCommand(cwd, projectName) {
+  let appPath = path.join(cwd, projectName);
+  return `node ${cpr} ${appPath} .`;
+}
+
+function tryCreateLocalCommand({
+  basedir,
+  projectName,
+  version
+}) {
+  return Promise.resolve().then(() => {
+    let reactScriptsRoot = path.join(basedir, 'node_modules/react-scripts');
+    try {
+      fs.statSync(reactScriptsRoot);
+    } catch (err) {
+      // no node_modules
+      return;
+    }
+    let reactScriptsVersion = utils.require(path.join(reactScriptsRoot, 'package.json')).version;
+    if (reactScriptsVersion !== version) {
+      // installed version is out-of-date
+      return;
+    }
+    return tmpDir().then(cwd => {
+      let appPath = path.join(cwd, projectName);
+      fs.mkdirSync(appPath);
+      utils.run('npm init --yes', { cwd: appPath });
+      return mutatePackageJson(appPath, pkg => {
+        pkg.devDependencies = {
+          'react-scripts': `^${version}`
+        };
+      }).then(() => {
+        let nodeModules = path.join(appPath, 'node_modules');
+        fs.mkdirSync(nodeModules);
+        symlinkOrCopySync(reactScriptsRoot, path.join(nodeModules, 'react-scripts'));
+        let init = require(path.join(reactScriptsRoot, 'scripts/init'));
+        let old = process.cwd();
+        process.chdir(appPath);
+        init(appPath, projectName);
+        process.chdir(old);
+        return Promise.all([
+          rimraf(path.join(appPath, '.git')),
+          rimraf(nodeModules),
+          rimraf(path.join(appPath, 'package-lock.json'))
+        ]).then(() => {
+          return getCommand(cwd, projectName);
+        });
+      });
+    });
+  });
+}
+
+module.exports.createRemoteCommand = function createRemoteCommand(projectName, version) {
+  return tmpDir().then(cwd => {
+    let appPath = path.join(cwd, projectName);
+    fs.mkdirSync(appPath);
+    utils.run('npm init --yes', { cwd: appPath });
+    utils.run(`npm install react-scripts@${version} --save-dev --no-package-lock`, { cwd: appPath });
+    let nodeModules = path.join(appPath, 'node_modules');
+    let reactScriptsRoot = path.join(nodeModules, 'react-scripts');
+    let init = require(path.join(reactScriptsRoot, 'scripts/init'));
+    let old = process.cwd();
+    process.chdir(appPath);
+    init(appPath, projectName);
+    process.chdir(old);
+    return Promise.all([
+      rimraf(path.join(appPath, '.git')),
+      rimraf(nodeModules),
+      rimraf(path.join(appPath, 'package-lock.json'))
+    ]).then(() => {
+      return getCommand(cwd, projectName);
+    });
+  });
+};
+
+module.exports.createCommand = function createCommand(projectName, version) {
+  return tryCreateLocalCommand({
+    basedir: process.cwd(),
+    projectName,
+    version
+  }).then(command => {
+    if (command) {
+      return command;
+    }
+    return utils.which('react-scripts').then(reactScriptsPath => {
+      return tryCreateLocalCommand({
+        basedir: path.dirname(reactScriptsPath),
+        projectName,
+        version
+      });
+    }).catch(err => {
+      if (err.message === 'not found: react-scripts') {
+        // not installed globally
+        return;
+      }
+      throw err;
+    });
+  }).then(command => {
+    if (command) {
+      return command;
+    }
+    return module.exports.createRemoteCommand(projectName, version);
+  });
+};
