@@ -11,6 +11,8 @@ const symlinkOrCopySync = require('symlink-or-copy').sync;
 const readFile = denodeify(fs.readFile);
 const writeFile = denodeify(fs.writeFile);
 
+const packageName = 'react-scripts';
+
 function mutatePackageJson(cwd, callback) {
   let filePath = path.join(cwd, 'package.json');
   return readFile(filePath).then(file => {
@@ -27,8 +29,8 @@ module.exports = function getStartAndEndCommands({
   endVersion
 }) {
   // test
-  // utils.run('npm i react-scripts@1.0.0 --no-save --no-package-lock');
-  // utils.run('npm i -g react-scripts');
+  utils.run(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
+  utils.run(`npm i -g ${packageName}`);
 
   return Promise.all([
     module.exports.createCommand(projectName, startVersion),
@@ -47,73 +49,72 @@ function getCommand(cwd, projectName) {
   return `node ${cpr} ${appPath} .`;
 }
 
+function asdf({
+  projectName,
+  f1
+}) {
+  return tmpDir().then(cwd => {
+    let appPath = path.join(cwd, projectName);
+    fs.mkdirSync(appPath);
+    let nodeModules = path.join(appPath, 'node_modules');
+    fs.mkdirSync(nodeModules);
+    utils.run('npm init --yes', { cwd: appPath });
+    return f1(appPath).then(() => {
+      let packageRoot = path.join(nodeModules, packageName);
+      let init = require(path.join(packageRoot, 'scripts/init'));
+      let old = process.cwd();
+      process.chdir(appPath);
+      init(appPath, projectName);
+      process.chdir(old);
+      return Promise.all([
+        rimraf(path.join(appPath, '.git')),
+        rimraf(nodeModules),
+        rimraf(path.join(appPath, 'package-lock.json'))
+      ]);
+    }).then(() => {
+      return getCommand(cwd, projectName);
+    });
+  });
+}
+
 function tryCreateLocalCommand({
   basedir,
   projectName,
   version
 }) {
   return Promise.resolve().then(() => {
-    let reactScriptsRoot = path.join(basedir, 'node_modules/react-scripts');
+    let packageRoot = path.join(basedir, 'node_modules', packageName);
     try {
-      fs.statSync(reactScriptsRoot);
+      fs.statSync(packageRoot);
     } catch (err) {
       // no node_modules
       return;
     }
-    let reactScriptsVersion = utils.require(path.join(reactScriptsRoot, 'package.json')).version;
-    if (reactScriptsVersion !== version) {
+    let packageVersion = utils.require(path.join(packageRoot, 'package.json')).version;
+    if (packageVersion !== version) {
       // installed version is out-of-date
       return;
     }
-    return tmpDir().then(cwd => {
-      let appPath = path.join(cwd, projectName);
-      fs.mkdirSync(appPath);
-      utils.run('npm init --yes', { cwd: appPath });
-      return mutatePackageJson(appPath, pkg => {
-        pkg.devDependencies = {
-          'react-scripts': `^${version}`
-        };
-      }).then(() => {
-        let nodeModules = path.join(appPath, 'node_modules');
-        fs.mkdirSync(nodeModules);
-        symlinkOrCopySync(reactScriptsRoot, path.join(nodeModules, 'react-scripts'));
-        let init = require(path.join(reactScriptsRoot, 'scripts/init'));
-        let old = process.cwd();
-        process.chdir(appPath);
-        init(appPath, projectName);
-        process.chdir(old);
-        return Promise.all([
-          rimraf(path.join(appPath, '.git')),
-          rimraf(nodeModules),
-          rimraf(path.join(appPath, 'package-lock.json'))
-        ]).then(() => {
-          return getCommand(cwd, projectName);
+    return asdf({
+      projectName,
+      f1(appPath) {
+        return mutatePackageJson(appPath, pkg => {
+          pkg.devDependencies[packageName] = `^${version}`;
+        }).then(() => {
+          symlinkOrCopySync(packageRoot, path.join(appPath, 'node_modules', packageName));
         });
-      });
+      }
     });
   });
 }
 
 module.exports.createRemoteCommand = function createRemoteCommand(projectName, version) {
-  return tmpDir().then(cwd => {
-    let appPath = path.join(cwd, projectName);
-    fs.mkdirSync(appPath);
-    utils.run('npm init --yes', { cwd: appPath });
-    utils.run(`npm install react-scripts@${version} --save-dev --no-package-lock`, { cwd: appPath });
-    let nodeModules = path.join(appPath, 'node_modules');
-    let reactScriptsRoot = path.join(nodeModules, 'react-scripts');
-    let init = require(path.join(reactScriptsRoot, 'scripts/init'));
-    let old = process.cwd();
-    process.chdir(appPath);
-    init(appPath, projectName);
-    process.chdir(old);
-    return Promise.all([
-      rimraf(path.join(appPath, '.git')),
-      rimraf(nodeModules),
-      rimraf(path.join(appPath, 'package-lock.json'))
-    ]).then(() => {
-      return getCommand(cwd, projectName);
-    });
+  return asdf({
+    projectName,
+    f1(appPath) {
+      utils.run(`npm install ${packageName}@${version} --save-dev --no-package-lock`, { cwd: appPath });
+      return Promise.resolve();
+    }
   });
 };
 
@@ -126,14 +127,14 @@ module.exports.createCommand = function createCommand(projectName, version) {
     if (command) {
       return command;
     }
-    return utils.which('react-scripts').then(reactScriptsPath => {
+    return utils.which(packageName).then(packagePath => {
       return tryCreateLocalCommand({
-        basedir: path.dirname(reactScriptsPath),
+        basedir: path.dirname(packagePath),
         projectName,
         version
       });
     }).catch(err => {
-      if (err.message === 'not found: react-scripts') {
+      if (err.message === `not found: ${packageName}`) {
         // not installed globally
         return;
       }
