@@ -15,10 +15,10 @@
         "--timeout",
         "999999",
         "--colors",
-        "${workspaceRoot}/test/!(fixtures)/**/*-test.js"
+        "${workspaceRoot}/test/integration/index-test.js"
       ],
       "env": {
-        "DEBUG": "ember-cli-update,git-diff-apply,git-fixtures,ember-cli-addon-tests"
+        "DEBUG": "create-react-app-update,git-diff-apply,git-fixtures"
       },
       "internalConsoleOptions": "openOnSessionStart"
     }

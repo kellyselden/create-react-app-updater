@@ -1,12 +1,20 @@
 'use strict';
 
+const packageName = 'react-scripts';
+
 module.exports = function getPackageVersion({
-  dependencies
+  dependencies,
+  devDependencies
 }) {
   let packageVersion;
 
   if (dependencies) {
-    packageVersion = dependencies['react-scripts'];
+    // v2.1.1
+    packageVersion = dependencies[packageName];
+  }
+  if (!packageVersion && devDependencies) {
+    // v1.0.0
+    packageVersion = devDependencies[packageName];
   }
 
   if (!packageVersion) {

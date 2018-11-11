@@ -48,14 +48,12 @@ describe('Integration - index', function() {
     compareOnly,
     statsOnly,
     runCodemods,
-    listCodemods,
-    createCustomDiff
+    listCodemods
   }) {
     tmpPath = buildTmp({
       fixturesPath,
       commitMessage,
-      dirty,
-      npmInstall: createCustomDiff
+      dirty
     });
 
     process.chdir(tmpPath);
@@ -67,8 +65,7 @@ describe('Integration - index', function() {
       compareOnly,
       statsOnly,
       runCodemods,
-      listCodemods,
-      createCustomDiff
+      listCodemods
     });
 
     return processExit({
@@ -276,7 +273,7 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
   });
 
   it.only('can create a personal diff instead of using an output repo', function() {
-    this.timeout(2 * 60 * 1000);
+    this.timeout(60 * 60 * 1000);
 
     return merge({
       fixturesPath: 'test/fixtures/local/my-app',

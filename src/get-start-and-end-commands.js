@@ -7,11 +7,10 @@ const denodeify = require('denodeify');
 const tmpDir = denodeify(require('tmp').dir);
 const rimraf = denodeify(require('rimraf'));
 const cpr = path.resolve(path.dirname(require.resolve('cpr')), '../bin/cpr');
-const symlinkOrCopySync = require('symlink-or-copy').sync;
 const readFile = denodeify(fs.readFile);
 const writeFile = denodeify(fs.writeFile);
 
-const packageName = 'react-scripts';
+const packageName = 'create-react-app';
 
 function mutatePackageJson(cwd, callback) {
   let filePath = path.join(cwd, 'package.json');
@@ -51,25 +50,27 @@ function getCommand(cwd, projectName) {
 
 function asdf({
   projectName,
-  f1
+  version
 }) {
   return tmpDir().then(cwd => {
+    utils.run(`npx -p ${packageName}@${version} ${packageName} ${projectName} --scripts-version ${version}`, { cwd });
     let appPath = path.join(cwd, projectName);
-    fs.mkdirSync(appPath);
-    let nodeModules = path.join(appPath, 'node_modules');
-    fs.mkdirSync(nodeModules);
-    utils.run('npm init --yes', { cwd: appPath });
-    return f1(appPath).then(() => {
-      let packageRoot = path.join(nodeModules, packageName);
-      let init = require(path.join(packageRoot, 'scripts/init'));
-      let old = process.cwd();
-      process.chdir(appPath);
-      init(appPath, projectName);
-      process.chdir(old);
+    return mutatePackageJson(appPath, pkg => {
+      let newVersion = `^${version}`;
+      let packageName = 'react-scripts';
+      if (pkg.dependencies[packageName]) {
+        // v2.1.1
+        pkg.dependencies[packageName] = newVersion;
+      } else {
+        // v1.0.0
+        pkg.devDependencies[packageName] = newVersion;
+      }
+    }).then(() => {
       return Promise.all([
-        rimraf(path.join(appPath, '.git')),
-        rimraf(nodeModules),
-        rimraf(path.join(appPath, 'package-lock.json'))
+        // rimraf(path.join(appPath, '.git')),
+        rimraf(path.join(appPath, 'node_modules')),
+        rimraf(path.join(appPath, 'package-lock.json')),
+        rimraf(path.join(appPath, 'yarn.lock'))
       ]);
     }).then(() => {
       return getCommand(cwd, projectName);
@@ -97,13 +98,7 @@ function tryCreateLocalCommand({
     }
     return asdf({
       projectName,
-      f1(appPath) {
-        return mutatePackageJson(appPath, pkg => {
-          pkg.devDependencies[packageName] = `^${version}`;
-        }).then(() => {
-          symlinkOrCopySync(packageRoot, path.join(appPath, 'node_modules', packageName));
-        });
-      }
+      version
     });
   });
 }
@@ -111,10 +106,7 @@ function tryCreateLocalCommand({
 module.exports.createRemoteCommand = function createRemoteCommand(projectName, version) {
   return asdf({
     projectName,
-    f1(appPath) {
-      utils.run(`npm install ${packageName}@${version} --save-dev --no-package-lock`, { cwd: appPath });
-      return Promise.resolve();
-    }
+    version
   });
 };
 
