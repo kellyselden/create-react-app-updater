@@ -9,6 +9,7 @@ const rimraf = denodeify(require('rimraf'));
 const cpr = path.resolve(path.dirname(require.resolve('cpr')), '../bin/cpr');
 const readFile = denodeify(fs.readFile);
 const writeFile = denodeify(fs.writeFile);
+const semver = require('semver');
 
 const packageName = 'create-react-app';
 
@@ -20,6 +21,29 @@ function mutatePackageJson(cwd, callback) {
     file = JSON.stringify(pkg, null, 2);
     return writeFile(filePath, file);
   });
+}
+
+function getVersions(packageName) {
+  let output = utils.run(`npm info ${packageName} --json`);
+  let { time } = JSON.parse(output);
+  return time;
+}
+
+function getTime(version) {
+  let versions = getVersions(packageName);
+  return new Date(versions[version]);
+}
+
+function getVersion(packageName, asOf) {
+  let versions = getVersions(packageName);
+  let versionsInRange = Object.keys(versions).filter(version => {
+    if (['created', 'modified'].includes(version)) {
+      return false;
+    }
+    return new Date(versions[version]) < asOf;
+  });
+  let version = semver.maxSatisfying(versionsInRange, '');
+  return version;
 }
 
 module.exports = function getStartAndEndCommands({
@@ -65,9 +89,14 @@ function asdf({
         // v1.0.0
         pkg.devDependencies[packageName] = newVersion;
       }
+      let time = getTime(version);
+      ['react', 'react-dom'].forEach(packageName => {
+        let version = getVersion(packageName, time);
+        pkg.dependencies[packageName] = `^${version}`;
+      });
     }).then(() => {
       return Promise.all([
-        // rimraf(path.join(appPath, '.git')),
+        rimraf(path.join(appPath, '.git')),
         rimraf(path.join(appPath, 'node_modules')),
         rimraf(path.join(appPath, 'package-lock.json')),
         rimraf(path.join(appPath, 'yarn.lock'))
