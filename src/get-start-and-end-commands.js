@@ -10,6 +10,7 @@ const cpr = path.resolve(path.dirname(require.resolve('cpr')), '../bin/cpr');
 const readFile = denodeify(fs.readFile);
 const writeFile = denodeify(fs.writeFile);
 const semver = require('semver');
+const { spawn } = require('child_process');
 
 const packageName = 'create-react-app';
 
@@ -48,16 +49,17 @@ function getVersion(packageName, asOf) {
 
 module.exports = function getStartAndEndCommands({
   projectName,
+  projectType,
   startVersion,
   endVersion
 }) {
   // test
-  utils.run(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
-  utils.run(`npm i -g ${packageName}`);
+  // utils.run(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
+  // utils.run(`npm i -g ${packageName}`);
 
   return Promise.all([
-    module.exports.createCommand(projectName, startVersion),
-    module.exports.createCommand(projectName, endVersion)
+    module.exports.createCommand(projectName, projectType, startVersion),
+    module.exports.createCommand(projectName, projectType, endVersion)
   ]).then(([
     startCommand,
     endCommand
@@ -74,25 +76,52 @@ function getCommand(cwd, projectName) {
 
 function asdf({
   projectName,
+  projectType,
   version
 }) {
   return tmpDir().then(cwd => {
-    utils.run(`npx -p ${packageName}@${version} ${packageName} ${projectName} --scripts-version ${version}`, { cwd });
+    utils.run(`npx ${packageName}@${version} ${projectName} --scripts-version ${version}`, { cwd });
     let appPath = path.join(cwd, projectName);
-    return mutatePackageJson(appPath, pkg => {
-      let newVersion = `^${version}`;
-      let packageName = 'react-scripts';
-      if (pkg.dependencies[packageName]) {
-        // v2.1.1
-        pkg.dependencies[packageName] = newVersion;
-      } else {
-        // v1.0.0
-        pkg.devDependencies[packageName] = newVersion;
+    return Promise.resolve().then(() => {
+      if (projectType !== 'ejected') {
+        return;
       }
-      let time = getTime(version);
-      ['react', 'react-dom'].forEach(packageName => {
-        let version = getVersion(packageName, time);
-        pkg.dependencies[packageName] = `^${version}`;
+
+      let ps = spawn('node', [
+        'node_modules/react-scripts/bin/react-scripts.js',
+        'eject'
+      ], {
+        cwd: appPath
+      });
+
+      ps.stdout.on('data', data => {
+        let str = data.toString();
+        if (str.includes('Are you sure you want to eject?')) {
+          ps.stdin.write('y\n');
+        }
+      });
+
+      return new Promise(resolve => {
+        ps.on('exit', resolve);
+      });
+    }).then(() => {
+      return mutatePackageJson(appPath, pkg => {
+        if (projectType === 'normal') {
+          let newVersion = `^${version}`;
+          let packageName = 'react-scripts';
+          if (pkg.dependencies[packageName]) {
+            // v2.1.1
+            pkg.dependencies[packageName] = newVersion;
+          } else {
+            // v1.0.0
+            pkg.devDependencies[packageName] = newVersion;
+          }
+        }
+        let time = getTime(version);
+        ['react', 'react-dom'].forEach(packageName => {
+          let version = getVersion(packageName, time);
+          pkg.dependencies[packageName] = `^${version}`;
+        });
       });
     }).then(() => {
       return Promise.all([
@@ -110,6 +139,7 @@ function asdf({
 function tryCreateLocalCommand({
   basedir,
   projectName,
+  projectType,
   version
 }) {
   return Promise.resolve().then(() => {
@@ -127,22 +157,25 @@ function tryCreateLocalCommand({
     }
     return asdf({
       projectName,
+      projectType,
       version
     });
   });
 }
 
-module.exports.createRemoteCommand = function createRemoteCommand(projectName, version) {
+module.exports.createRemoteCommand = function createRemoteCommand(projectName, projectType, version) {
   return asdf({
     projectName,
+    projectType,
     version
   });
 };
 
-module.exports.createCommand = function createCommand(projectName, version) {
+module.exports.createCommand = function createCommand(projectName, projectType, version) {
   return tryCreateLocalCommand({
     basedir: process.cwd(),
     projectName,
+    projectType,
     version
   }).then(command => {
     if (command) {
@@ -152,6 +185,7 @@ module.exports.createCommand = function createCommand(projectName, version) {
       return tryCreateLocalCommand({
         basedir: path.dirname(packagePath),
         projectName,
+        projectType,
         version
       });
     }).catch(err => {
@@ -165,6 +199,6 @@ module.exports.createCommand = function createCommand(projectName, version) {
     if (command) {
       return command;
     }
-    return module.exports.createRemoteCommand(projectName, version);
+    return module.exports.createRemoteCommand(projectName, projectType, version);
   });
 };

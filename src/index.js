@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const getPackageJson = require('./get-package-json');
+const getProjectType = require('./get-project-type');
 const getPackageVersion = require('./get-package-version');
 const getVersions = require('./get-versions');
 const getProjectVersion = require('./get-project-version');
@@ -32,91 +33,93 @@ module.exports = function createReactAppUpdate({
     }
 
     let packageJson = getPackageJson('.');
-    let packageVersion = getPackageVersion(packageJson);
+    let projectType = getProjectType(packageJson);
     let versions = getVersions();
-
-    let startVersion;
-    if (from) {
-      startVersion = getTagVersion(from, versions);
-    } else {
-      startVersion = getProjectVersion(packageVersion, versions);
-    }
-
-    let endVersion = getTagVersion(to, versions);
-
-    let startTag = `v${startVersion}`;
-    let endTag = `v${endVersion}`;
-
-    if (statsOnly) {
-      return getApplicableCodemods({
-        startVersion
-      }).then(codemods => {
-        return formatStats({
-          startVersion,
-          endVersion,
-          codemods
-        });
-      });
-    }
-
-    if (_runCodemods) {
-      return getApplicableCodemods({
-        startVersion
-      }).then(codemods => {
-        const inquirer = require('inquirer');
-
-        return inquirer.prompt([{
-          type: 'checkbox',
-          message: 'These codemods apply to your project. Select which ones to run.',
-          name: 'codemods',
-          choices: Object.keys(codemods)
-        }]).then(answers => {
-          return runCodemods(answers.codemods.map(codemod => codemods[codemod]));
-        });
-      });
-    }
-
-    let startCommand;
-    let endCommand;
-
-    return getStartAndEndCommands({
-      projectName: packageJson.name,
-      startVersion,
-      endVersion
-    }).then(commands => {
-      startCommand = commands.startCommand;
-      endCommand = commands.endCommand;
-
-      let ignoredFiles;
-      if (!reset) {
-        ignoredFiles = ['package.json'];
+    return getPackageVersion(packageJson, projectType, versions).then(packageVersion => {
+      let startVersion;
+      if (from) {
+        startVersion = getTagVersion(from, versions);
       } else {
-        ignoredFiles = [];
+        startVersion = getProjectVersion(packageVersion, versions);
       }
 
-      return gitDiffApply({
-        startTag,
-        endTag,
-        resolveConflicts,
-        ignoredFiles,
-        reset,
-        createCustomDiff: true,
-        startCommand,
-        endCommand
-      }).then(results => {
-        if (reset) {
-          return;
+      let endVersion = getTagVersion(to, versions);
+
+      let startTag = `v${startVersion}`;
+      let endTag = `v${endVersion}`;
+
+      if (statsOnly) {
+        return getApplicableCodemods({
+          startVersion
+        }).then(codemods => {
+          return formatStats({
+            startVersion,
+            endVersion,
+            codemods
+          });
+        });
+      }
+
+      if (_runCodemods) {
+        return getApplicableCodemods({
+          startVersion
+        }).then(codemods => {
+          const inquirer = require('inquirer');
+
+          return inquirer.prompt([{
+            type: 'checkbox',
+            message: 'These codemods apply to your project. Select which ones to run.',
+            name: 'codemods',
+            choices: Object.keys(codemods)
+          }]).then(answers => {
+            return runCodemods(answers.codemods.map(codemod => codemods[codemod]));
+          });
+        });
+      }
+
+      let startCommand;
+      let endCommand;
+
+      return getStartAndEndCommands({
+        projectName: packageJson.name,
+        projectType,
+        startVersion,
+        endVersion
+      }).then(commands => {
+        startCommand = commands.startCommand;
+        endCommand = commands.endCommand;
+
+        let ignoredFiles;
+        if (!reset) {
+          ignoredFiles = ['package.json'];
+        } else {
+          ignoredFiles = [];
         }
 
-        let myPackageJson = fs.readFileSync('package.json', 'utf8');
-        let fromPackageJson = results.from['package.json'];
-        let toPackageJson = results.to['package.json'];
+        return gitDiffApply({
+          startTag,
+          endTag,
+          resolveConflicts,
+          ignoredFiles,
+          reset,
+          createCustomDiff: true,
+          startCommand,
+          endCommand
+        }).then(results => {
+          if (reset) {
+            return;
+          }
 
-        let newPackageJson = mergePackageJson(myPackageJson, fromPackageJson, toPackageJson);
+          let myPackageJson = fs.readFileSync('package.json', 'utf8');
+          let fromPackageJson = results.from['package.json'];
+          let toPackageJson = results.to['package.json'];
 
-        fs.writeFileSync('package.json', newPackageJson);
+          let newPackageJson = mergePackageJson(myPackageJson, fromPackageJson, toPackageJson);
 
-        run('git add package.json');
+          fs.writeFileSync('package.json', newPackageJson);
+
+          run('git add package.json');
+        });
       });
     });
   });

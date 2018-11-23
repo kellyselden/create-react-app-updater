@@ -32,6 +32,7 @@
     "inquirer": "^6.1.0",
     "merge-package.json": "^2.0.0",
     "npx": "^10.0.1",
+    "p-map": "^2.0.0",
     "resolve": "^1.8.1",
     "rimraf": "^2.6.2",
     "semver": "^5.4.1",

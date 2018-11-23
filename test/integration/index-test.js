@@ -272,17 +272,32 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
     });
   });
 
-  it.only('can create a personal diff instead of using an output repo', function() {
+  it.only('can update a normal app', function() {
     this.timeout(60 * 60 * 1000);
 
     return merge({
-      fixturesPath: 'test/fixtures/local/my-app',
-      createCustomDiff: true
+      fixturesPath: 'test/fixtures/local/my-app'
     }).then(({
       status
     }) => {
       fixtureCompare({
         mergeFixtures: 'test/fixtures/merge/my-app'
+      });
+
+      assertNoUnstaged(status);
+    });
+  });
+
+  it.only('can update an ejected app', function() {
+    this.timeout(60 * 60 * 1000);
+
+    return merge({
+      fixturesPath: 'test/fixtures/local/ejected-app'
+    }).then(({
+      status
+    }) => {
+      fixtureCompare({
+        mergeFixtures: 'test/fixtures/merge/ejected-app'
       });
 
       assertNoUnstaged(status);

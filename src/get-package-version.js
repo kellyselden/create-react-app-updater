@@ -1,25 +1,45 @@
 'use strict';
 
-const packageName = 'react-scripts';
+const run = require('./run-async');
+const pMap = require('p-map');
 
 module.exports = function getPackageVersion({
   dependencies,
   devDependencies
-}) {
+}, projectType, versions) {
   let packageVersion;
 
-  if (dependencies) {
-    // v2.1.1
-    packageVersion = dependencies[packageName];
-  }
-  if (!packageVersion && devDependencies) {
-    // v1.0.0
-    packageVersion = devDependencies[packageName];
-  }
+  return Promise.resolve().then(() => {
+    let allDeps = Object.assign({}, dependencies, devDependencies);
 
-  if (!packageVersion) {
-    throw 'Create React App version could not be determined';
-  }
+    if (projectType === 'ejected') {
+      let reactDevUtilsVersion = allDeps['react-dev-utils'];
 
-  return packageVersion;
+      return pMap(versions.reverse(), reactScriptsVersion => {
+        if (packageVersion) {
+          return;
+        }
+
+        return run(`npm info react-scripts@${reactScriptsVersion} dependencies --json`).then(results => {
+          if (packageVersion) {
+            return;
+          }
+
+          let dependencies = JSON.parse(results);
+
+          if (dependencies['react-dev-utils'] === reactDevUtilsVersion) {
+            packageVersion = `^${reactScriptsVersion}`;
+          }
+        });
+      }, { concurrency: 5 });
+    }
+
+    packageVersion = allDeps['react-scripts'];
+  }).then(() => {
+    if (!packageVersion) {
+      throw 'Create React App version could not be determined';
+    }
+
+    return packageVersion;
+  });
 };
