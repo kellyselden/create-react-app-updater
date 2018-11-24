@@ -2,7 +2,7 @@
 
 const path = require('path');
 const execa = require('execa');
-const debug = require('debug')('create-react-app-update');
+const debug = require('debug')('create-react-app-updater');
 
 module.exports = function npx(command, options = {}) {
   debug(`npx ${command}`);

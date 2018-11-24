@@ -1,25 +1,25 @@
 {
-  "name": "create-react-app-update",
+  "name": "create-react-app-updater",
   "version": "0.0.0",
   "description": "",
   "main": "src/index.js",
   "bin": {
-    "create-react-app-update": "bin/index.js"
+    "create-react-app-updater": "bin/index.js"
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "cross-env DEBUG=create-react-app-update,git-diff-apply,git-fixtures mocha \"test/acceptance/index-test.js\""
+    "test": "cross-env DEBUG=create-react-app-updater,git-diff-apply,git-fixtures mocha \"test/acceptance/index-test.js\""
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/kellyselden/create-react-app-update.git"
+    "url": "git+ssh://git@gitlab.com/kellyselden/create-react-app-updater.git"
   },
   "author": "Kelly Selden",
   "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/kellyselden/create-react-app-update/issues"
+    "url": "https://gitlab.com/kellyselden/create-react-app-updater/issues"
   },
-  "homepage": "https://gitlab.com/kellyselden/create-react-app-update#readme",
+  "homepage": "https://gitlab.com/kellyselden/create-react-app-updater#readme",
   "engines": {
     "node": ">= 6"
   },

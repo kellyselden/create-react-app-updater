@@ -16,7 +16,7 @@ const run = require('./run');
 const utils = require('./utils');
 const getStartAndEndCommands = require('./get-start-and-end-commands');
 
-module.exports = function createReactAppUpdate({
+module.exports = function createReactAppUpdater({
   from,
   to,
   resolveConflicts,

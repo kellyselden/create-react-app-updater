@@ -1,7 +1,7 @@
 'use strict';
 
 const cp = require('child_process');
-const debug = require('debug')('create-react-app-update');
+const debug = require('debug')('create-react-app-updater');
 
 module.exports = function run(command, options) {
   debug(command);

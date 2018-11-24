@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const createReactAppUpdate = require('../src');
+const createReactAppUpdater = require('../src');
 const args = require('../src/args');
 
 const { argv } = require('yargs')
@@ -30,7 +30,7 @@ updateNotifier({
   }
 }).notify();
 
-createReactAppUpdate({
+createReactAppUpdater({
   from,
   to,
   resolveConflicts,

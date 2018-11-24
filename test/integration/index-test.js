@@ -8,7 +8,7 @@ const {
   fixtureCompare: _fixtureCompare
 } = require('git-fixtures');
 const { isGitClean } = require('git-diff-apply');
-const createReactAppUpdate = require('../../src');
+const createReactAppUpdater = require('../../src');
 const utils = require('../../src/utils');
 const buildTmp = require('../helpers/build-tmp');
 const {
@@ -58,7 +58,7 @@ describe('Integration - index', function() {
 
     process.chdir(tmpPath);
 
-    let promise = createReactAppUpdate({
+    let promise = createReactAppUpdater({
       from,
       to,
       reset,
