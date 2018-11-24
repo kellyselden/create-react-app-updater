@@ -7,7 +7,7 @@ const tmpDir = denodeify(require('tmp').dir);
 module.exports = function runCodemod(codemod) {
   if (codemod.script) {
     return tmpDir().then(cwd => {
-      eval(`process.argv = ['${process.argv[0]}', '${cwd}']; ${codemod.script}`);
+      eval(`process.argv = ['${process.argv[0].replace(/\\/g, '\\\\')}', '${cwd.replace(/\\/g, '\\\\')}']; ${codemod.script}`);
     });
   }
   return codemod.commands.reduce((promise, command) => {
