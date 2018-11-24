@@ -37,8 +37,7 @@ describe('Acceptance - index', function() {
 
     let args = [
       '--to',
-      '3.2.0-beta.1',
-      '--resolve-conflicts'
+      '2.1.1'
     ];
     if (runCodemods) {
       args = [
@@ -47,7 +46,7 @@ describe('Acceptance - index', function() {
     }
 
     return processBin({
-      binFile: 'ember-cli-update',
+      binFile: 'index',
       args,
       cwd: tmpPath,
       commitMessage,
@@ -98,14 +97,14 @@ describe('Acceptance - index', function() {
     });
   });
 
-  (shouldSkipCodemods ? it.skip : it)('runs codemods', function() {
+  (shouldSkipCodemods ? it.skip : it.only)('runs codemods', function() {
     this.timeout(5 * 60 * 1000);
 
     let {
       ps,
       promise
     } = merge({
-      fixturesPath: 'test/fixtures/merge/my-app',
+      fixturesPath: 'test/fixtures/codemod/before',
       runCodemods: true
     });
 
@@ -120,11 +119,11 @@ describe('Acceptance - index', function() {
       status
     }) => {
       // file is indeterminent between OS's, so ignore
-      fs.removeSync(path.join(tmpPath, 'MODULE_REPORT.md'));
+      // fs.removeSync(path.join(tmpPath, 'MODULE_REPORT.md'));
 
-      let mergeFixtures = 'test/fixtures/codemod/latest-node/my-app';
+      let mergeFixtures = 'test/fixtures/codemod/latest-node';
       if (process.env.NODE_LTS) {
-        mergeFixtures = 'test/fixtures/codemod/min-node/my-app';
+        mergeFixtures = 'test/fixtures/codemod/min-node';
       }
 
       fixtureCompare({

@@ -27,9 +27,5 @@ module.exports.assertNoStaged = function(status) {
 };
 
 module.exports.assertCodemodRan = function(status) {
-  // codemod changed locally, no change upstream
-  expect(status).to.match(/^M {2}.*app\/controllers\/application\.js$/m);
-
-  // codemod changed locally, also changed upstream
-  expect(status).to.match(/^M {2}.*app\/router\.js$/m);
+  expect(status).to.match(/^M {2}.*src\/index\.js$/m);
 };

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "cross-env DEBUG=create-react-app-update,git-diff-apply,git-fixtures mocha \"test/integration/index-test.js\""
+    "test": "cross-env DEBUG=create-react-app-update,git-diff-apply,git-fixtures mocha \"test/acceptance/index-test.js\""
   },
   "repository": {
     "type": "git",
