@@ -15,8 +15,11 @@ const {
   assertNoUnstaged,
   assertNoStaged
 } = require('../helpers/assertions');
+const semver = require('semver');
 
 const commitMessage = 'add files';
+
+const shouldRunUpdateTests = semver.major(process.version) >= 8;
 
 describe('Integration - index', function() {
   this.timeout(30 * 1000);
@@ -272,7 +275,7 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
     });
   });
 
-  it.only('can update a normal app', function() {
+  (shouldRunUpdateTests ? it.only : it.skip)('can update a normal app', function() {
     this.timeout(60 * 60 * 1000);
 
     return merge({
@@ -288,7 +291,7 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
     });
   });
 
-  it.only('can update an ejected app', function() {
+  (shouldRunUpdateTests ? it.only : it.skip)('can update an ejected app', function() {
     this.timeout(60 * 60 * 1000);
 
     return merge({
