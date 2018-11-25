@@ -27,6 +27,11 @@ module.exports = function getPackageVersion({
               return;
             }
 
+            // some versions may be missing deps
+            if (!results) {
+              return;
+            }
+
             let dependencies = JSON.parse(results);
 
             if (dependencies['react-dev-utils'] === reactDevUtilsVersion) {
