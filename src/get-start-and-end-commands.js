@@ -30,11 +30,6 @@ function getVersions(packageName) {
   return time;
 }
 
-function getTime(version) {
-  let versions = getVersions(packageName);
-  return new Date(versions[version]);
-}
-
 function getVersion(packageName, asOf) {
   let versions = getVersions(packageName);
   let versionsInRange = Object.keys(versions).filter(version => {
@@ -50,8 +45,12 @@ function getVersion(packageName, asOf) {
 module.exports = function getStartAndEndCommands({
   projectName,
   projectType,
-  startVersion,
-  endVersion
+  createReactAppStartVersion,
+  reactScriptsStartVersion,
+  startTime,
+  createReactAppEndVersion,
+  reactScriptsEndVersion,
+  endTime
 }) {
   // test
   // utils.run(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
@@ -61,12 +60,16 @@ module.exports = function getStartAndEndCommands({
     module.exports.createCommand({
       projectName,
       projectType,
-      version: startVersion
+      createReactAppVersion: createReactAppStartVersion,
+      reactScriptsVersion: reactScriptsStartVersion,
+      time: startTime
     }),
     module.exports.createCommand({
       projectName,
       projectType,
-      version: endVersion
+      createReactAppVersion: createReactAppEndVersion,
+      reactScriptsVersion: reactScriptsEndVersion,
+      time: endTime
     })
   ]).then(([
     startCommand,
@@ -85,10 +88,12 @@ function getCommand(cwd, projectName) {
 function asdf({
   projectName,
   projectType,
-  version
+  createReactAppVersion,
+  reactScriptsVersion,
+  time
 }) {
   return tmpDir().then(cwd => {
-    utils.run(`npx ${packageName}@${version} ${projectName} --scripts-version ${version}`, { cwd });
+    utils.run(`npx create-react-app@${createReactAppVersion} ${projectName} --scripts-version ${reactScriptsVersion}`, { cwd });
     let appPath = path.join(cwd, projectName);
     return Promise.resolve().then(() => {
       if (projectType !== 'ejected') {
@@ -102,12 +107,10 @@ function asdf({
         cwd: appPath
       });
 
-      ps.stdout.on('data', data => {
-        let str = data.toString();
-        if (str.includes('Are you sure you want to eject?')) {
-          ps.stdin.write('y\n');
-        }
-      });
+      ps.stdin.write('y\n');
+      if (semver.lte(reactScriptsVersion, '0.8.1')) {
+        ps.stdin.end();
+      }
 
       return new Promise(resolve => {
         ps.on('exit', resolve);
@@ -115,7 +118,7 @@ function asdf({
     }).then(() => {
       return mutatePackageJson(appPath, pkg => {
         if (projectType === 'normal') {
-          let newVersion = `^${version}`;
+          let newVersion = `^${reactScriptsVersion}`;
           let packageName = 'react-scripts';
           if (pkg.dependencies[packageName]) {
             // v2.1.1
@@ -125,7 +128,6 @@ function asdf({
             pkg.devDependencies[packageName] = newVersion;
           }
         }
-        let time = getTime(version);
         ['react', 'react-dom'].forEach(packageName => {
           let version = getVersion(packageName, time);
           pkg.dependencies[packageName] = `^${version}`;
@@ -148,7 +150,9 @@ function tryCreateLocalCommand({
   basedir,
   projectName,
   projectType,
-  version
+  createReactAppVersion,
+  reactScriptsVersion,
+  time
 }) {
   return Promise.resolve().then(() => {
     let packageRoot = path.join(basedir, 'node_modules', packageName);
@@ -159,14 +163,16 @@ function tryCreateLocalCommand({
       return;
     }
     let packageVersion = utils.require(path.join(packageRoot, 'package.json')).version;
-    if (packageVersion !== version) {
+    if (packageVersion !== createReactAppVersion) {
       // installed version is out-of-date
       return;
     }
     return asdf({
       projectName,
       projectType,
-      version
+      createReactAppVersion,
+      reactScriptsVersion,
+      time
     });
   });
 }
@@ -174,25 +180,33 @@ function tryCreateLocalCommand({
 module.exports.createRemoteCommand = function createRemoteCommand({
   projectName,
   projectType,
-  version
+  createReactAppVersion,
+  reactScriptsVersion,
+  time
 }) {
   return asdf({
     projectName,
     projectType,
-    version
+    createReactAppVersion,
+    reactScriptsVersion,
+    time
   });
 };
 
 module.exports.createCommand = function createCommand({
   projectName,
   projectType,
-  version
+  createReactAppVersion,
+  reactScriptsVersion,
+  time
 }) {
   return tryCreateLocalCommand({
     basedir: process.cwd(),
     projectName,
     projectType,
-    version
+    createReactAppVersion,
+    reactScriptsVersion,
+    time
   }).then(command => {
     if (command) {
       return command;
@@ -202,7 +216,9 @@ module.exports.createCommand = function createCommand({
         basedir: path.dirname(packagePath),
         projectName,
         projectType,
-        version
+        createReactAppVersion,
+        reactScriptsVersion,
+        time
       });
     }).catch(err => {
       if (err.message === `not found: ${packageName}`) {
@@ -218,7 +234,9 @@ module.exports.createCommand = function createCommand({
     return module.exports.createRemoteCommand({
       projectName,
       projectType,
-      version
+      createReactAppVersion,
+      reactScriptsVersion,
+      time
     });
   });
 };
