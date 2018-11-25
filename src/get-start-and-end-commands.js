@@ -25,8 +25,8 @@ function mutatePackageJson(cwd, callback) {
 }
 
 function getVersions(packageName) {
-  let output = utils.run(`npm info ${packageName} --json`);
-  let { time } = JSON.parse(output);
+  let output = utils.run(`npm info ${packageName} time --json`);
+  let time = JSON.parse(output);
   return time;
 }
 
