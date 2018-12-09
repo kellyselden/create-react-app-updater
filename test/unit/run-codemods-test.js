@@ -21,7 +21,7 @@ describe('Unit - runCodemods', function() {
     sandbox.restore();
   });
 
-  it('works', function() {
+  it.skip('works', function() {
     return runCodemods({
       testCodemod: {
         commands: [
@@ -39,7 +39,7 @@ describe('Unit - runCodemods', function() {
     });
   });
 
-  it('runs multiple commands sequentially', function() {
+  it.skip('runs multiple commands sequentially', function() {
     let testCodemod1 = {
       commands: [
         'test command 1'

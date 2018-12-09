@@ -59,7 +59,7 @@ describe('Unit - getStartAndEndCommands', function() {
     }, options));
   }
 
-  it('works for app', function() {
+  it.skip('works for app', function() {
     return getStartAndEndCommands({
       projectType: 'app'
     }).then(({
@@ -78,7 +78,7 @@ describe('Unit - getStartAndEndCommands', function() {
     });
   });
 
-  it('works for addon', function() {
+  it.skip('works for addon', function() {
     return getStartAndEndCommands({
       projectType: 'addon'
     }).then(({
@@ -97,7 +97,7 @@ describe('Unit - getStartAndEndCommands', function() {
     });
   });
 
-  it('throws for glimmer', function() {
+  it.skip('throws for glimmer', function() {
     expect(() => getStartAndEndCommands({
       projectType: 'glimmer'
     })).to.throw('cannot checkout older versions of glimmer blueprint');
@@ -111,7 +111,7 @@ describe('Unit - getStartAndEndCommands', function() {
       return _createRemoteCommand(projectName, command, endVersion);
     }
 
-    it('works', function() {
+    it.skip('works', function() {
       return createRemoteCommand().then(_command => {
         expect(npxStub.args[0][0]).to.contain(command).and.contain(endVersion);
 
@@ -125,7 +125,7 @@ describe('Unit - getStartAndEndCommands', function() {
       return _createLocalCommand(projectName, command, startVersion);
     }
 
-    it('falls back to remote copy if ember-cli is missing', function() {
+    it.skip('falls back to remote copy if ember-cli is missing', function() {
       resolveStub.rejects({ code: 'MODULE_NOT_FOUND' });
 
       return createLocalCommand().then(_command => {
@@ -139,7 +139,7 @@ describe('Unit - getStartAndEndCommands', function() {
       });
     });
 
-    it('throws if fails for another reason', function() {
+    it.skip('throws if fails for another reason', function() {
       resolveStub.rejects({ code: 'test code' });
 
       return expect(createLocalCommand()).to.eventually.be.rejected
@@ -151,7 +151,7 @@ describe('Unit - getStartAndEndCommands', function() {
         });
     });
 
-    it('falls back to remote copy if ember-cli is wrong version', function() {
+    it.skip('falls back to remote copy if ember-cli is wrong version', function() {
       resolveStub.withArgs('ember-cli', { basedir: process.cwd() })
         .resolves('/path/to/lib/cli/index.js');
       requireStub.returns({
@@ -169,7 +169,7 @@ describe('Unit - getStartAndEndCommands', function() {
       });
     });
 
-    it('uses local copy if ember-cli exists and same version', function() {
+    it.skip('uses local copy if ember-cli exists and same version', function() {
       resolveStub.withArgs('ember-cli', { basedir: process.cwd() })
         .resolves('/path/to/lib/cli/index.js');
       requireStub.returns({
@@ -191,7 +191,7 @@ describe('Unit - getStartAndEndCommands', function() {
       return _createGlobalCommand(projectName, command, endVersion);
     }
 
-    it('falls back to remote copy if ember-cli is missing', function() {
+    it.skip('falls back to remote copy if ember-cli is missing', function() {
       whichStub.rejects({ message: 'not found: ember' });
 
       return createGlobalCommand().then(_command => {
@@ -205,7 +205,7 @@ describe('Unit - getStartAndEndCommands', function() {
       });
     });
 
-    it('throws if fails for another reason', function() {
+    it.skip('throws if fails for another reason', function() {
       whichStub.rejects({ message: 'test message' });
 
       return expect(createGlobalCommand()).to.eventually.be.rejectedWith('test message')
@@ -216,7 +216,7 @@ describe('Unit - getStartAndEndCommands', function() {
         });
     });
 
-    it('falls back to remote copy if ember-cli is wrong version', function() {
+    it.skip('falls back to remote copy if ember-cli is wrong version', function() {
       resolveStub.withArgs('ember-cli', { basedir: path.resolve('/path/to/lib') })
         .resolves('/path/to/lib/cli/index.js');
       requireStub.returns({
@@ -234,7 +234,7 @@ describe('Unit - getStartAndEndCommands', function() {
       });
     });
 
-    it('uses local copy if ember-cli exists and same version', function() {
+    it.skip('uses local copy if ember-cli exists and same version', function() {
       resolveStub.withArgs('ember-cli', { basedir: path.resolve('/path/to/lib') })
         .resolves('/path/to/lib/cli/index.js');
       requireStub.returns({

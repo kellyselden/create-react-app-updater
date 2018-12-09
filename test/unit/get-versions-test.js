@@ -27,7 +27,7 @@ describe('Unit - getVersions', function() {
     });
   }
 
-  it('gets versions for ember app', function() {
+  it.skip('gets versions for ember app', function() {
     let versionsString = '["1"]';
 
     let runStub = createStub(versionsString);
@@ -40,7 +40,7 @@ describe('Unit - getVersions', function() {
     expect(runStub.args[0][0]).to.contain('ember-cli');
   });
 
-  it('gets versions for ember addon', function() {
+  it.skip('gets versions for ember addon', function() {
     let versionsString = '["2"]';
 
     let runStub = createStub(versionsString);
@@ -53,7 +53,7 @@ describe('Unit - getVersions', function() {
     expect(runStub.args[0][0]).to.contain('ember-cli');
   });
 
-  it('gets versions for glimmer app', function() {
+  it.skip('gets versions for glimmer app', function() {
     let versionsString = '["3"]';
 
     let runStub = sandbox.stub(utils, 'run').returns(versionsString);

@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const getProjectType = require('../../src/get-project-type');
 
 describe('Integration - getProjectType', function() {
-  it('throws if not found', function() {
+  it.skip('throws if not found', function() {
     let packageJson = {};
 
     expect(() => {
@@ -12,7 +12,7 @@ describe('Integration - getProjectType', function() {
     }).to.throw('Ember CLI project type could not be determined');
   });
 
-  it('detects ember app', function() {
+  it.skip('detects ember app', function() {
     let packageJson = {
       devDependencies: {
         'ember-cli': '2.11'
@@ -22,7 +22,7 @@ describe('Integration - getProjectType', function() {
     expect(getProjectType(packageJson)).to.equal('app');
   });
 
-  it('detects ember addon', function() {
+  it.skip('detects ember addon', function() {
     let packageJson = {
       keywords: [
         'ember-addon'
@@ -35,7 +35,7 @@ describe('Integration - getProjectType', function() {
     expect(getProjectType(packageJson)).to.equal('addon');
   });
 
-  it('detects glimmer app', function() {
+  it.skip('detects glimmer app', function() {
     let packageJson = {
       devDependencies: {
         '@glimmer/blueprint': '0.3'

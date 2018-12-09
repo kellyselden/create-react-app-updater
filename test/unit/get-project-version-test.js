@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const getProjectVersion = require('../../src/get-project-version');
 
 describe('Unit - getProjectVersion', function() {
-  it('works', function() {
+  it.skip('works', function() {
     expect(getProjectVersion(
       '2.11.1',
       [
@@ -22,7 +22,7 @@ describe('Unit - getProjectVersion', function() {
     )).to.equal('2.12.0');
   });
 
-  it('throws if glimmer and < 0.6.3', function() {
+  it.skip('throws if glimmer and < 0.6.3', function() {
     expect(() => getProjectVersion(
       '0.3',
       [
@@ -32,7 +32,7 @@ describe('Unit - getProjectVersion', function() {
     )).to.throw('version cannot be determined');
   });
 
-  it('doesn\'t throw if glimmer and >= 0.6.3', function() {
+  it.skip('doesn\'t throw if glimmer and >= 0.6.3', function() {
     expect(getProjectVersion(
       '0.6',
       [

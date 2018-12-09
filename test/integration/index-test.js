@@ -92,7 +92,7 @@ describe('Integration - index', function() {
     });
   }
 
-  it('handles dirty', function() {
+  it.skip('handles dirty', function() {
     return merge({
       fixturesPath: 'test/fixtures/local/my-app',
       dirty: true
@@ -108,7 +108,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it('handles non-ember-cli app', function() {
+  it.skip('handles non-ember-cli app', function() {
     return merge({
       fixturesPath: 'test/fixtures/package-json/non-ember-cli'
     }).then(({
@@ -120,7 +120,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it('handles non-npm dir', function() {
+  it.skip('handles non-npm dir', function() {
     return merge({
       fixturesPath: 'test/fixtures/package-json/missing'
     }).then(({
@@ -132,7 +132,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it('handles malformed package.json', function() {
+  it.skip('handles malformed package.json', function() {
     return merge({
       fixturesPath: 'test/fixtures/package-json/malformed'
     }).then(({
@@ -144,7 +144,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it('updates glimmer app', function() {
+  it.skip('updates glimmer app', function() {
     return merge({
       fixturesPath: 'test/fixtures/local/glimmer-app',
       from: '0.5.0',
@@ -162,7 +162,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it('needs --from if glimmer app before 0.6.3', function() {
+  it.skip('needs --from if glimmer app before 0.6.3', function() {
     return merge({
       fixturesPath: 'test/fixtures/local/glimmer-app',
       to: '0.6.1'
@@ -175,7 +175,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it('resets app', function() {
+  it.skip('resets app', function() {
     return merge({
       fixturesPath: 'test/fixtures/local/my-app',
       reset: true
@@ -192,7 +192,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it('opens compare url', function() {
+  it.skip('opens compare url', function() {
     let opn = sandbox.stub(utils, 'opn');
 
     return merge({
@@ -211,7 +211,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it('resolves semver ranges', function() {
+  it.skip('resolves semver ranges', function() {
     let opn = sandbox.stub(utils, 'opn');
 
     return merge({
@@ -224,7 +224,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it('shows stats only', function() {
+  it.skip('shows stats only', function() {
     return merge({
       fixturesPath: 'test/fixtures/local/my-app',
       statsOnly: true
@@ -243,7 +243,7 @@ applicable codemods: `);
   });
 
   // this one can be removed once the above starts returning codemods
-  it('shows stats only - codemods', function() {
+  it.skip('shows stats only - codemods', function() {
     return merge({
       fixturesPath: 'test/fixtures/codemod/min-node/my-app',
       statsOnly: true
@@ -261,7 +261,7 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
     });
   });
 
-  it('lists codemods', function() {
+  it.skip('lists codemods', function() {
     return merge({
       fixturesPath: 'test/fixtures/local/my-app',
       listCodemods: true
@@ -275,7 +275,7 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
     });
   });
 
-  (shouldRunUpdateTests ? it.only : it.skip)('can update a normal app', function() {
+  (shouldRunUpdateTests ? it : it.skip)('can update a normal app', function() {
     this.timeout(60 * 60 * 1000);
 
     return merge({
@@ -291,7 +291,7 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
     });
   });
 
-  (shouldRunUpdateTests ? it.only : it.skip)('can update an ejected app', function() {
+  (shouldRunUpdateTests ? it : it.skip)('can update an ejected app', function() {
     this.timeout(60 * 60 * 1000);
 
     return merge({

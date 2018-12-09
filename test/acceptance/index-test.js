@@ -67,7 +67,7 @@ describe('Acceptance - index', function() {
     });
   }
 
-  it('updates app', function() {
+  it.skip('updates app', function() {
     return merge({
       fixturesPath: 'test/fixtures/local/my-app'
     }).promise.then(({
@@ -82,7 +82,7 @@ describe('Acceptance - index', function() {
     });
   });
 
-  it('updates addon', function() {
+  it.skip('updates addon', function() {
     return merge({
       fixturesPath: 'test/fixtures/local/my-addon'
     }).promise.then(({
@@ -97,7 +97,7 @@ describe('Acceptance - index', function() {
     });
   });
 
-  (shouldSkipCodemods ? it.skip : it.only)('runs codemods', function() {
+  (shouldSkipCodemods ? it.skip : it)('runs codemods', function() {
     this.timeout(5 * 60 * 1000);
 
     let {
@@ -135,7 +135,7 @@ describe('Acceptance - index', function() {
     });
   });
 
-  it('scopes to sub dir if run from there', function() {
+  it.skip('scopes to sub dir if run from there', function() {
     return merge({
       fixturesPath: 'test/fixtures/local/my-app',
       subDir: 'foo/bar'

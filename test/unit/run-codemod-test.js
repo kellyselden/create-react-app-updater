@@ -19,7 +19,7 @@ describe('Unit - runCodemod', function() {
     sandbox.restore();
   });
 
-  it('works', function() {
+  it.skip('works', function() {
     return runCodemod({
       commands: [
         'test command'
@@ -31,7 +31,7 @@ describe('Unit - runCodemod', function() {
     });
   });
 
-  it('runs multiple commands sequentially', function() {
+  it.skip('runs multiple commands sequentially', function() {
     let npx1 = npx.withArgs('test command 1').callsFake(() => {
       return Promise.resolve().then(() => {
         expect(npx2.args).to.deep.equal([]);
@@ -56,7 +56,7 @@ describe('Unit - runCodemod', function() {
     });
   });
 
-  it('continues if one codemod errors', function() {
+  it.skip('continues if one codemod errors', function() {
     npx.withArgs('test command 1').rejects();
     let npx2 = npx.withArgs('test command 2').resolves();
 

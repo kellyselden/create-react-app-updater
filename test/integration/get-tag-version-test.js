@@ -22,11 +22,11 @@ describe('Integration - getTagVersion', function() {
     sandbox.restore();
   });
 
-  it('allows version override', function() {
+  it.skip('allows version override', function() {
     expect(getTagVersion('2.13.1')).to.equal('2.13.1');
   });
 
-  it('allows semver hints', function() {
+  it.skip('allows semver hints', function() {
     expect(getTagVersion(
       '~2.12',
       [
@@ -36,19 +36,19 @@ describe('Integration - getTagVersion', function() {
     )).to.equal('2.12.1');
   });
 
-  it('works for ember app + beta', function() {
+  it.skip('works for ember app + beta', function() {
     expect(semver.valid(getTagVersion('beta', null, 'app'))).to.not.be.null;
     expect(runSpy.calledOnce).to.be.ok;
     expect(runSpy.args[0][0]).to.contain('ember-cli@beta');
   });
 
-  it('works for ember addon + latest', function() {
+  it.skip('works for ember addon + latest', function() {
     expect(semver.valid(getTagVersion('latest', null, 'addon'))).to.not.be.null;
     expect(runSpy.calledOnce).to.be.ok;
     expect(runSpy.args[0][0]).to.contain('ember-cli@latest');
   });
 
-  it('works for glimmer app + beta', function() {
+  it.skip('works for glimmer app + beta', function() {
     expect(semver.valid(getTagVersion('beta', null, 'glimmer'))).to.not.be.null;
     expect(runSpy.calledOnce).to.be.ok;
     expect(runSpy.args[0][0]).to.contain('@glimmer/blueprint@beta');
