@@ -58,8 +58,16 @@ module.exports = function getStartAndEndCommands({
   // utils.run(`npm i -g ${packageName}`);
 
   return Promise.all([
-    module.exports.createCommand(projectName, projectType, startVersion),
-    module.exports.createCommand(projectName, projectType, endVersion)
+    module.exports.createCommand({
+      projectName,
+      projectType,
+      version: startVersion
+    }),
+    module.exports.createCommand({
+      projectName,
+      projectType,
+      version: endVersion
+    })
   ]).then(([
     startCommand,
     endCommand
@@ -163,7 +171,11 @@ function tryCreateLocalCommand({
   });
 }
 
-module.exports.createRemoteCommand = function createRemoteCommand(projectName, projectType, version) {
+module.exports.createRemoteCommand = function createRemoteCommand({
+  projectName,
+  projectType,
+  version
+}) {
   return asdf({
     projectName,
     projectType,
@@ -171,7 +183,11 @@ module.exports.createRemoteCommand = function createRemoteCommand(projectName, p
   });
 };
 
-module.exports.createCommand = function createCommand(projectName, projectType, version) {
+module.exports.createCommand = function createCommand({
+  projectName,
+  projectType,
+  version
+}) {
   return tryCreateLocalCommand({
     basedir: process.cwd(),
     projectName,
@@ -199,6 +215,10 @@ module.exports.createCommand = function createCommand(projectName, projectType, 
     if (command) {
       return command;
     }
-    return module.exports.createRemoteCommand(projectName, projectType, version);
+    return module.exports.createRemoteCommand({
+      projectName,
+      projectType,
+      version
+    });
   });
 };
