@@ -21,7 +21,6 @@ module.exports = function createReactAppUpdater({
   to,
   resolveConflicts,
   runCodemods: _runCodemods,
-  reset,
   statsOnly,
   listCodemods
 }) {
@@ -89,27 +88,15 @@ module.exports = function createReactAppUpdater({
         startCommand = commands.startCommand;
         endCommand = commands.endCommand;
 
-        let ignoredFiles;
-        if (!reset) {
-          ignoredFiles = ['package.json'];
-        } else {
-          ignoredFiles = [];
-        }
-
         return gitDiffApply({
           startTag,
           endTag,
           resolveConflicts,
-          ignoredFiles,
-          reset,
+          ignoredFiles: ['package.json'],
           createCustomDiff: true,
           startCommand,
           endCommand
         }).then(results => {
-          if (reset) {
-            return;
-          }
-
           let myPackageJson = fs.readFileSync('package.json', 'utf8');
           let fromPackageJson = results.from['package.json'];
           let toPackageJson = results.to['package.json'];
