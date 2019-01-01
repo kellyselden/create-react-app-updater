@@ -8,12 +8,12 @@ const getVersions = require('./get-versions');
 const getProjectVersion = require('./get-project-version');
 const getTagVersion = require('./get-tag-version');
 const formatStats = require('./format-stats');
-const getApplicableCodemods = require('./get-applicable-codemods');
+const getCodemods = require('boilerplate-update/src/get-codemods');
+const getApplicableCodemods = require('boilerplate-update/src/get-applicable-codemods');
 const runCodemods = require('boilerplate-update/src/run-codemods');
 const mergePackageJson = require('merge-package.json');
 const gitDiffApply = require('git-diff-apply');
 const run = require('./run-async');
-const utils = require('./utils');
 const getStartAndEndCommands = require('./get-start-and-end-commands');
 const semver = require('semver');
 
@@ -38,6 +38,8 @@ function getVersionAtTime(times, time, margin = 0) {
   return version;
 }
 
+const codemodsUrl = 'https://cdn.jsdelivr.net/gh/kellyselden/create-react-app-updater-codemods-manifest@vv1/manifest.json';
+
 module.exports = function createReactAppUpdater({
   from,
   to,
@@ -48,7 +50,7 @@ module.exports = function createReactAppUpdater({
 }) {
   return Promise.resolve().then(() => {
     if (listCodemods) {
-      return utils.getCodemods().then(codemods => {
+      return getCodemods(codemodsUrl).then(codemods => {
         return JSON.stringify(codemods, null, 2);
       });
     }
@@ -93,6 +95,7 @@ module.exports = function createReactAppUpdater({
 
         if (statsOnly) {
           return getApplicableCodemods({
+            projectType,
             startVersion
           }).then(codemods => {
             return formatStats({
@@ -105,6 +108,8 @@ module.exports = function createReactAppUpdater({
 
         if (_runCodemods) {
           return getApplicableCodemods({
+            url: codemodsUrl,
+            projectType,
             startVersion
           }).then(codemods => {
             const inquirer = require('inquirer');
