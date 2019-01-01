@@ -78,65 +78,81 @@ module.exports = function getStartAndEndCommands({
   }));
 };
 
-function _prepareCommand({
-  createProject,
+function postCreateProject({
+  cwd,
   options: {
     projectName,
     projectType,
-    reactScriptsVersion,
-    time
+    reactScriptsVersion
   }
 }) {
+  let appPath = path.join(cwd, projectName);
+
+  return Promise.resolve().then(() => {
+    if (projectType !== 'ejected') {
+      return;
+    }
+
+    let ps = spawn('node', [
+      'node_modules/react-scripts/bin/react-scripts.js',
+      'eject'
+    ], {
+      cwd: appPath
+    });
+
+    ps.stdin.write('y\n');
+    if (semver.lte(reactScriptsVersion, '0.8.1')) {
+      ps.stdin.end();
+    }
+
+    return new Promise(resolve => {
+      ps.on('exit', resolve);
+    });
+  }).then(() => {
+    return appPath;
+  });
+}
+
+function _mutatePackageJson({
+  projectType,
+  reactScriptsVersion,
+  time
+}) {
+  return function mutatePackageJson(pkg) {
+    if (projectType === 'normal') {
+      let newVersion = `^${reactScriptsVersion}`;
+      let packageName = 'react-scripts';
+      if (pkg.dependencies[packageName]) {
+        // v2.1.1
+        pkg.dependencies[packageName] = newVersion;
+      } else {
+        // v1.0.0
+        pkg.devDependencies[packageName] = newVersion;
+      }
+    }
+    ['react', 'react-dom'].forEach(packageName => {
+      let version = getVersion(packageName, time);
+      pkg.dependencies[packageName] = `^${version}`;
+    });
+  };
+}
+
+function _prepareCommand({
+  createProject,
+  options
+}) {
   return tmpDir().then(cwd => {
-    let appPath = path.join(cwd, projectName);
-
-    return createProject(cwd).then(() => {
-      if (projectType !== 'ejected') {
-        return;
-      }
-
-      let ps = spawn('node', [
-        'node_modules/react-scripts/bin/react-scripts.js',
-        'eject'
-      ], {
-        cwd: appPath
+    return createProject(cwd).then(appPath => {
+      return mutatePackageJson(appPath, _mutatePackageJson(options)).then(() => {
+        return Promise.all([
+          rimraf(path.join(appPath, '.git')),
+          rimraf(path.join(appPath, 'node_modules')),
+          rimraf(path.join(appPath, 'package-lock.json')),
+          rimraf(path.join(appPath, 'yarn.lock'))
+        ]);
+      }).then(() => {
+        return `node ${cpr} ${appPath} .`;
       });
-
-      ps.stdin.write('y\n');
-      if (semver.lte(reactScriptsVersion, '0.8.1')) {
-        ps.stdin.end();
-      }
-
-      return new Promise(resolve => {
-        ps.on('exit', resolve);
-      });
-    }).then(() => {
-      return mutatePackageJson(appPath, pkg => {
-        if (projectType === 'normal') {
-          let newVersion = `^${reactScriptsVersion}`;
-          let packageName = 'react-scripts';
-          if (pkg.dependencies[packageName]) {
-            // v2.1.1
-            pkg.dependencies[packageName] = newVersion;
-          } else {
-            // v1.0.0
-            pkg.devDependencies[packageName] = newVersion;
-          }
-        }
-        ['react', 'react-dom'].forEach(packageName => {
-          let version = getVersion(packageName, time);
-          pkg.dependencies[packageName] = `^${version}`;
-        });
-      });
-    }).then(() => {
-      return Promise.all([
-        rimraf(path.join(appPath, '.git')),
-        rimraf(path.join(appPath, 'node_modules')),
-        rimraf(path.join(appPath, 'package-lock.json')),
-        rimraf(path.join(appPath, 'yarn.lock'))
-      ]);
-    }).then(() => {
-      return `node ${cpr} ${appPath} .`;
     });
   });
 }
@@ -162,7 +178,11 @@ function tryPrepareCommandUsingCache({
     return _prepareCommand({
       createProject(cwd) {
         utils.run(`node ${path.join(packageRoot, 'index.js')} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
-        return Promise.resolve();
+
+        return postCreateProject({
+          cwd,
+          options
+        });
       },
       options
     });
@@ -173,7 +193,11 @@ module.exports.prepareCommandUsingRemote = function prepareCommandUsingRemote(op
   return _prepareCommand({
     createProject(cwd) {
       utils.run(`npx create-react-app@${options.createReactAppVersion} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
-      return Promise.resolve();
+
+      return postCreateProject({
+        cwd,
+        options
+      });
     },
     options
   });
