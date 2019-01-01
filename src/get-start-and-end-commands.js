@@ -79,11 +79,13 @@ module.exports = function getStartAndEndCommands({
 };
 
 function _prepareCommand({
-  projectName,
-  projectType,
   createProject,
-  reactScriptsVersion,
-  time
+  options: {
+    projectName,
+    projectType,
+    reactScriptsVersion,
+    time
+  }
 }) {
   return tmpDir().then(cwd => {
     let appPath = path.join(cwd, projectName);
@@ -139,13 +141,9 @@ function _prepareCommand({
   });
 }
 
-function tryCreateLocalCommand({
+function tryPrepareCommandUsingCache({
   basedir,
-  projectName,
-  projectType,
-  createReactAppVersion,
-  reactScriptsVersion,
-  time
+  options
 }) {
   return Promise.resolve().then(() => {
     // can't use resolve here because there is no "main" in package.json
@@ -157,74 +155,42 @@ function tryCreateLocalCommand({
       return;
     }
     let packageVersion = utils.require(path.join(packageRoot, 'package.json')).version;
-    if (packageVersion !== createReactAppVersion) {
+    if (packageVersion !== options.createReactAppVersion) {
       // installed version is out-of-date
       return;
     }
     return _prepareCommand({
-      projectName,
-      projectType,
       createProject(cwd) {
-        utils.run(`node ${path.join(packageRoot, 'index.js')} ${projectName} --scripts-version ${reactScriptsVersion}`, { cwd });
+        utils.run(`node ${path.join(packageRoot, 'index.js')} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
         return Promise.resolve();
       },
-      reactScriptsVersion,
-      time
+      options
     });
   });
 }
 
-module.exports.prepareCommandUsingRemote = function prepareCommandUsingRemote({
-  projectName,
-  projectType,
-  createReactAppVersion,
-  reactScriptsVersion,
-  time
-}) {
+module.exports.prepareCommandUsingRemote = function prepareCommandUsingRemote(options) {
   return _prepareCommand({
-    projectName,
-    projectType,
     createProject(cwd) {
-      utils.run(`npx create-react-app@${createReactAppVersion} ${projectName} --scripts-version ${reactScriptsVersion}`, { cwd });
+      utils.run(`npx create-react-app@${options.createReactAppVersion} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
       return Promise.resolve();
     },
-    reactScriptsVersion,
-    time
+    options
   });
 };
 
-function tryPrepareCommandUsingLocal({
-  projectName,
-  projectType,
-  createReactAppVersion,
-  reactScriptsVersion,
-  time
-}) {
-  return tryCreateLocalCommand({
+function tryPrepareCommandUsingLocal(options) {
+  return tryPrepareCommandUsingCache({
     basedir: process.cwd(),
-    projectName,
-    projectType,
-    createReactAppVersion,
-    reactScriptsVersion,
-    time
+    options
   });
 }
 
-function tryPrepareCommandUsingGlobal({
-  projectName,
-  projectType,
-  createReactAppVersion,
-  reactScriptsVersion,
-  time
-}) {
+function tryPrepareCommandUsingGlobal(options) {
   return utils.which('create-react-app').then(packagePath => {
-    return tryCreateLocalCommand({
+    return tryPrepareCommandUsingCache({
       basedir: path.dirname(packagePath),
-      projectName,
-      projectType,
-      createReactAppVersion,
-      reactScriptsVersion,
-      time
+      options
     });
   }).catch(err => {
     if (err.message === 'not found: create-react-app') {
@@ -235,40 +201,16 @@ function tryPrepareCommandUsingGlobal({
   });
 }
 
-module.exports.prepareCommand = function prepareCommand({
-  projectName,
-  projectType,
-  createReactAppVersion,
-  reactScriptsVersion,
-  time
-}) {
-  return tryPrepareCommandUsingLocal({
-    projectName,
-    projectType,
-    createReactAppVersion,
-    reactScriptsVersion,
-    time
+module.exports.prepareCommand = function prepareCommand(options) {
+  return tryPrepareCommandUsingLocal(options).then(command => {
+    if (command) {
+      return command;
+    }
+    return tryPrepareCommandUsingGlobal(options);
   }).then(command => {
     if (command) {
       return command;
     }
-    return tryPrepareCommandUsingGlobal({
-      projectName,
-      projectType,
-      createReactAppVersion,
-      reactScriptsVersion,
-      time
-    });
-  }).then(command => {
-    if (command) {
-      return command;
-    }
-    return module.exports.prepareCommandUsingRemote({
-      projectName,
-      projectType,
-      createReactAppVersion,
-      reactScriptsVersion,
-      time
-    });
+    return module.exports.prepareCommandUsingRemote(options);
   });
 };
