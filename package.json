@@ -8,7 +8,7 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "cross-env DEBUG=create-react-app-updater,git-diff-apply,git-fixtures mocha \"test/!(fixtures)/index-test.js\""
+    "test": "cross-env DEBUG=create-react-app-updater,boilerplate-update,git-diff-apply,git-fixtures mocha \"test/!(fixtures)/index-test.js\""
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "node": ">= 6"
   },
   "dependencies": {
+    "boilerplate-update": "^0.1.0",
     "cpr": "^3.0.1",
     "debug": "^4.0.0",
     "denodeify": "^1.2.1",
