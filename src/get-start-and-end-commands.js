@@ -54,7 +54,7 @@ module.exports = function getStartAndEndCommands({
 }) {
   // test
   // utils.run(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
-  // utils.run(`npm i -g ${packageName}`);
+  // utils.run(`npm i -g ${packageName}@2.1.1`);
 
   return Promise.all([
     module.exports.createCommand({
