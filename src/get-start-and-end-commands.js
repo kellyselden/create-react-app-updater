@@ -12,8 +12,6 @@ const writeFile = denodeify(fs.writeFile);
 const semver = require('semver');
 const { spawn } = require('child_process');
 
-const packageName = 'create-react-app';
-
 function mutatePackageJson(cwd, callback) {
   let filePath = path.join(cwd, 'package.json');
   return readFile(filePath).then(file => {
@@ -57,14 +55,14 @@ module.exports = function getStartAndEndCommands({
   // utils.run(`npm i -g ${packageName}@2.1.1`);
 
   return Promise.all([
-    module.exports.createCommand({
+    module.exports.prepareCommand({
       projectName,
       projectType,
       createReactAppVersion: createReactAppStartVersion,
       reactScriptsVersion: reactScriptsStartVersion,
       time: startTime
     }),
-    module.exports.createCommand({
+    module.exports.prepareCommand({
       projectName,
       projectType,
       createReactAppVersion: createReactAppEndVersion,
@@ -80,7 +78,7 @@ module.exports = function getStartAndEndCommands({
   }));
 };
 
-function _createCommand({
+function _prepareCommand({
   projectName,
   projectType,
   createProject,
@@ -150,7 +148,8 @@ function tryCreateLocalCommand({
   time
 }) {
   return Promise.resolve().then(() => {
-    let packageRoot = path.join(basedir, 'node_modules', packageName);
+    // can't use resolve here because there is no "main" in package.json
+    let packageRoot = path.join(basedir, 'node_modules/create-react-app');
     try {
       fs.statSync(packageRoot);
     } catch (err) {
@@ -162,7 +161,7 @@ function tryCreateLocalCommand({
       // installed version is out-of-date
       return;
     }
-    return _createCommand({
+    return _prepareCommand({
       projectName,
       projectType,
       createProject(cwd) {
@@ -175,14 +174,14 @@ function tryCreateLocalCommand({
   });
 }
 
-module.exports.createRemoteCommand = function createRemoteCommand({
+module.exports.prepareCommandUsingRemote = function prepareCommandUsingRemote({
   projectName,
   projectType,
   createReactAppVersion,
   reactScriptsVersion,
   time
 }) {
-  return _createCommand({
+  return _prepareCommand({
     projectName,
     projectType,
     createProject(cwd) {
@@ -194,7 +193,7 @@ module.exports.createRemoteCommand = function createRemoteCommand({
   });
 };
 
-module.exports.createCommand = function createCommand({
+function tryPrepareCommandUsingLocal({
   projectName,
   projectType,
   createReactAppVersion,
@@ -208,31 +207,63 @@ module.exports.createCommand = function createCommand({
     createReactAppVersion,
     reactScriptsVersion,
     time
+  });
+}
+
+function tryPrepareCommandUsingGlobal({
+  projectName,
+  projectType,
+  createReactAppVersion,
+  reactScriptsVersion,
+  time
+}) {
+  return utils.which('create-react-app').then(packagePath => {
+    return tryCreateLocalCommand({
+      basedir: path.dirname(packagePath),
+      projectName,
+      projectType,
+      createReactAppVersion,
+      reactScriptsVersion,
+      time
+    });
+  }).catch(err => {
+    if (err.message === 'not found: create-react-app') {
+      // not installed globally
+      return;
+    }
+    throw err;
+  });
+}
+
+module.exports.prepareCommand = function prepareCommand({
+  projectName,
+  projectType,
+  createReactAppVersion,
+  reactScriptsVersion,
+  time
+}) {
+  return tryPrepareCommandUsingLocal({
+    projectName,
+    projectType,
+    createReactAppVersion,
+    reactScriptsVersion,
+    time
   }).then(command => {
     if (command) {
       return command;
     }
-    return utils.which(packageName).then(packagePath => {
-      return tryCreateLocalCommand({
-        basedir: path.dirname(packagePath),
-        projectName,
-        projectType,
-        createReactAppVersion,
-        reactScriptsVersion,
-        time
-      });
-    }).catch(err => {
-      if (err.message === `not found: ${packageName}`) {
-        // not installed globally
-        return;
-      }
-      throw err;
+    return tryPrepareCommandUsingGlobal({
+      projectName,
+      projectType,
+      createReactAppVersion,
+      reactScriptsVersion,
+      time
     });
   }).then(command => {
     if (command) {
       return command;
     }
-    return module.exports.createRemoteCommand({
+    return module.exports.prepareCommandUsingRemote({
       projectName,
       projectType,
       createReactAppVersion,
