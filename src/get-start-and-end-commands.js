@@ -47,11 +47,22 @@ function createProjectFromCache({
   options
 }) {
   return function createProject(cwd) {
-    utils.run(`node ${path.join(packageRoot, 'index.js')} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
+    let ps = spawn('node', [
+      path.join(packageRoot, 'index.js'),
+      options.projectName,
+      '--scripts-version',
+      options.reactScriptsVersion
+    ], {
+      cwd
+    });
 
-    return postCreateProject({
-      cwd,
-      options
+    return new Promise(resolve => {
+      ps.on('exit', resolve);
+    }).then(() => {
+      return postCreateProject({
+        cwd,
+        options
+      });
     });
   };
 }
