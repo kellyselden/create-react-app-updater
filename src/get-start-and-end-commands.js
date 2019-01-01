@@ -80,22 +80,17 @@ module.exports = function getStartAndEndCommands({
   }));
 };
 
-function getCommand(cwd, projectName) {
-  let appPath = path.join(cwd, projectName);
-  return `node ${cpr} ${appPath} .`;
-}
-
-function asdf({
+function _createCommand({
   projectName,
   projectType,
-  createReactAppVersion,
+  createProject,
   reactScriptsVersion,
   time
 }) {
   return tmpDir().then(cwd => {
-    utils.run(`npx create-react-app@${createReactAppVersion} ${projectName} --scripts-version ${reactScriptsVersion}`, { cwd });
     let appPath = path.join(cwd, projectName);
-    return Promise.resolve().then(() => {
+
+    return createProject(cwd).then(() => {
       if (projectType !== 'ejected') {
         return;
       }
@@ -141,7 +136,7 @@ function asdf({
         rimraf(path.join(appPath, 'yarn.lock'))
       ]);
     }).then(() => {
-      return getCommand(cwd, projectName);
+      return `node ${cpr} ${appPath} .`;
     });
   });
 }
@@ -167,10 +162,13 @@ function tryCreateLocalCommand({
       // installed version is out-of-date
       return;
     }
-    return asdf({
+    return _createCommand({
       projectName,
       projectType,
-      createReactAppVersion,
+      createProject(cwd) {
+        utils.run(`node ${path.join(packageRoot, 'index.js')} ${projectName} --scripts-version ${reactScriptsVersion}`, { cwd });
+        return Promise.resolve();
+      },
       reactScriptsVersion,
       time
     });
@@ -184,10 +182,13 @@ module.exports.createRemoteCommand = function createRemoteCommand({
   reactScriptsVersion,
   time
 }) {
-  return asdf({
+  return _createCommand({
     projectName,
     projectType,
-    createReactAppVersion,
+    createProject(cwd) {
+      utils.run(`npx create-react-app@${createReactAppVersion} ${projectName} --scripts-version ${reactScriptsVersion}`, { cwd });
+      return Promise.resolve();
+    },
     reactScriptsVersion,
     time
   });
