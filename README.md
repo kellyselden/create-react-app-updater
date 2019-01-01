@@ -92,9 +92,9 @@ If you run into an error like `error: unrecognized input`, you may need to updat
 
 If you are getting an error or unexpected results, running the command with the debug flag:
 
-* Unix (global):&nbsp;&nbsp;&nbsp;`DEBUG=create-react-app-updater,git-diff-apply create-react-app-updater`
-* Windows (global):&nbsp;&nbsp;&nbsp;`set DEBUG=create-react-app-updater,git-diff-apply && create-react-app-updater`
-* Unix (npx):&nbsp;&nbsp;&nbsp;`DEBUG=create-react-app-updater,git-diff-apply npx create-react-app-updater`
-* Windows (npx):&nbsp;&nbsp;&nbsp;`set DEBUG=create-react-app-updater,git-diff-apply && npx create-react-app-updater`
+* Unix (global):&nbsp;&nbsp;&nbsp;`DEBUG=create-react-app-updater,boilerplate-update,git-diff-apply create-react-app-updater`
+* Windows (global):&nbsp;&nbsp;&nbsp;`set DEBUG=create-react-app-updater,boilerplate-update,git-diff-apply && create-react-app-updater`
+* Unix (npx):&nbsp;&nbsp;&nbsp;`DEBUG=create-react-app-updater,boilerplate-update,git-diff-apply npx create-react-app-updater`
+* Windows (npx):&nbsp;&nbsp;&nbsp;`set DEBUG=create-react-app-updater,boilerplate-update,git-diff-apply && npx create-react-app-updater`
 
 will give you more detailed logging.
