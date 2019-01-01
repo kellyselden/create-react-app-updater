@@ -54,21 +54,38 @@ module.exports = function getStartAndEndCommands({
   // utils.run(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
   // utils.run(`npm i -g ${packageName}@2.1.1`);
 
+  let options = {
+    projectName,
+    projectType,
+    packageName: 'create-react-app',
+    createProjectFromCache,
+    createProjectFromRemote,
+    mutatePackageJson: _mutatePackageJson
+  };
+
+  function prepareCommand(
+    createReactAppVersion,
+    reactScriptsVersion,
+    time
+  ) {
+    return module.exports.prepareCommand(Object.assign({
+      packageVersion: createReactAppVersion,
+      reactScriptsVersion,
+      time
+    }, options));
+  }
+
   return Promise.all([
-    module.exports.prepareCommand({
-      projectName,
-      projectType,
-      createReactAppVersion: createReactAppStartVersion,
-      reactScriptsVersion: reactScriptsStartVersion,
-      time: startTime
-    }),
-    module.exports.prepareCommand({
-      projectName,
-      projectType,
-      createReactAppVersion: createReactAppEndVersion,
-      reactScriptsVersion: reactScriptsEndVersion,
-      time: endTime
-    })
+    prepareCommand(
+      createReactAppStartVersion,
+      reactScriptsStartVersion,
+      startTime
+    ),
+    prepareCommand(
+      createReactAppEndVersion,
+      reactScriptsEndVersion,
+      endTime
+    )
   ]).then(([
     startCommand,
     endCommand
@@ -77,6 +94,33 @@ module.exports = function getStartAndEndCommands({
     endCommand
   }));
 };
+
+function createProjectFromCache({
+  packageRoot,
+  options
+}) {
+  return function createProject(cwd) {
+    utils.run(`node ${path.join(packageRoot, 'index.js')} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
+
+    return postCreateProject({
+      cwd,
+      options
+    });
+  };
+}
+
+function createProjectFromRemote({
+  options
+}) {
+  return function createProject(cwd) {
+    utils.run(`npx create-react-app@${options.packageVersion} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
+
+    return postCreateProject({
+      cwd,
+      options
+    });
+  };
+}
 
 function postCreateProject({
   cwd,
@@ -142,17 +186,21 @@ function _prepareCommand({
   options
 }) {
   return tmpDir().then(cwd => {
-    return createProject(cwd).then(appPath => {
-      return mutatePackageJson(appPath, _mutatePackageJson(options)).then(() => {
-        return Promise.all([
-          rimraf(path.join(appPath, '.git')),
-          rimraf(path.join(appPath, 'node_modules')),
-          rimraf(path.join(appPath, 'package-lock.json')),
-          rimraf(path.join(appPath, 'yarn.lock'))
-        ]);
-      }).then(() => {
-        return `node ${cpr} ${appPath} .`;
-      });
+    return createProject(cwd);
+  }).then(appPath => {
+    return Promise.resolve().then(() => {
+      if (options.mutatePackageJson) {
+        return mutatePackageJson(appPath, options.mutatePackageJson(options));
+      }
+    }).then(() => {
+      return Promise.all([
+        rimraf(path.join(appPath, '.git')),
+        rimraf(path.join(appPath, 'node_modules')),
+        rimraf(path.join(appPath, 'package-lock.json')),
+        rimraf(path.join(appPath, 'yarn.lock'))
+      ]);
+    }).then(() => {
+      return `node ${cpr} ${appPath} .`;
     });
   });
 }
@@ -163,7 +211,7 @@ function tryPrepareCommandUsingCache({
 }) {
   return Promise.resolve().then(() => {
     // can't use resolve here because there is no "main" in package.json
-    let packageRoot = path.join(basedir, 'node_modules/create-react-app');
+    let packageRoot = path.join(basedir, 'node_modules', options.packageName);
     try {
       fs.statSync(packageRoot);
     } catch (err) {
@@ -171,19 +219,15 @@ function tryPrepareCommandUsingCache({
       return;
     }
     let packageVersion = utils.require(path.join(packageRoot, 'package.json')).version;
-    if (packageVersion !== options.createReactAppVersion) {
+    if (packageVersion !== options.packageVersion) {
       // installed version is out-of-date
       return;
     }
     return _prepareCommand({
-      createProject(cwd) {
-        utils.run(`node ${path.join(packageRoot, 'index.js')} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
-
-        return postCreateProject({
-          cwd,
-          options
-        });
-      },
+      createProject: options.createProjectFromCache({
+        packageRoot,
+        options
+      }),
       options
     });
   });
@@ -191,14 +235,9 @@ function tryPrepareCommandUsingCache({
 
 module.exports.prepareCommandUsingRemote = function prepareCommandUsingRemote(options) {
   return _prepareCommand({
-    createProject(cwd) {
-      utils.run(`npx create-react-app@${options.createReactAppVersion} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
-
-      return postCreateProject({
-        cwd,
-        options
-      });
-    },
+    createProject: options.createProjectFromRemote({
+      options
+    }),
     options
   });
 };
@@ -211,13 +250,13 @@ function tryPrepareCommandUsingLocal(options) {
 }
 
 function tryPrepareCommandUsingGlobal(options) {
-  return utils.which('create-react-app').then(packagePath => {
+  return utils.which(options.packageName).then(packagePath => {
     return tryPrepareCommandUsingCache({
       basedir: path.dirname(packagePath),
       options
     });
   }).catch(err => {
-    if (err.message === 'not found: create-react-app') {
+    if (err.message === `not found: ${options.packageName}`) {
       // not installed globally
       return;
     }
