@@ -6,13 +6,9 @@ const debug = require('debug')('create-react-app-updater');
 module.exports = function run(command, options) {
   return new Promise((resolve, reject) => {
     debug(command);
-    exec(command, options, (err, stdout, stderr) => {
-      debug(command);
+    exec(command, options, (err, stdout) => {
       if (err) {
         return reject(err);
-      }
-      if (stderr) {
-        return reject(stderr);
       }
       debug(stdout);
       resolve(stdout);
