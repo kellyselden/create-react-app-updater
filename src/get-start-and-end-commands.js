@@ -54,38 +54,36 @@ module.exports = function getStartAndEndCommands({
   // utils.run(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
   // utils.run(`npm i -g ${packageName}@2.1.1`);
 
-  let options = {
+  return _getStartAndEndCommands({
     projectName,
     projectType,
     packageName: 'create-react-app',
     createProjectFromCache,
     createProjectFromRemote,
-    mutatePackageJson: _mutatePackageJson
-  };
+    mutatePackageJson: _mutatePackageJson,
+    startOptions: {
+      packageVersion: createReactAppStartVersion,
+      reactScriptsVersion: reactScriptsStartVersion,
+      time: startTime
+    },
+    endOptions: {
+      packageVersion: createReactAppEndVersion,
+      reactScriptsVersion: reactScriptsEndVersion,
+      time: endTime
+    }
+  });
+};
 
-  function prepareCommand(
-    createReactAppVersion,
-    reactScriptsVersion,
-    time
-  ) {
-    return module.exports.prepareCommand(Object.assign({
-      packageVersion: createReactAppVersion,
-      reactScriptsVersion,
-      time
-    }, options));
+function _getStartAndEndCommands(options) {
+  function prepareCommand(key) {
+    let _options = Object.assign({}, options, options[key]);
+    delete _options[key];
+    return module.exports.prepareCommand(_options);
   }
 
   return Promise.all([
-    prepareCommand(
-      createReactAppStartVersion,
-      reactScriptsStartVersion,
-      startTime
-    ),
-    prepareCommand(
-      createReactAppEndVersion,
-      reactScriptsEndVersion,
-      endTime
-    )
+    prepareCommand('startOptions'),
+    prepareCommand('endOptions')
   ]).then(([
     startCommand,
     endCommand
@@ -93,7 +91,7 @@ module.exports = function getStartAndEndCommands({
     startCommand,
     endCommand
   }));
-};
+}
 
 function createProjectFromCache({
   packageRoot,
