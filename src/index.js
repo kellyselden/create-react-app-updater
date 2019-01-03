@@ -6,7 +6,7 @@ const getProjectType = require('./get-project-type');
 const getPackageVersions = require('./get-package-versions');
 const getVersions = require('./get-versions');
 const getProjectVersion = require('./get-project-version');
-const getTagVersion = require('./get-tag-version');
+const _getTagVersion = require('./get-tag-version');
 const formatStats = require('./format-stats');
 const getCodemods = require('boilerplate-update/src/get-codemods');
 const getApplicableCodemods = require('boilerplate-update/src/get-applicable-codemods');
@@ -16,6 +16,7 @@ const gitDiffApply = require('git-diff-apply');
 const run = require('./run-async');
 const getStartAndEndCommands = require('./get-start-and-end-commands');
 const semver = require('semver');
+const co = require('co');
 
 function npm(pkg, field) {
   return run(`npm info ${pkg} ${field} --json`).then(JSON.parse);
@@ -65,16 +66,18 @@ module.exports = function createReactAppUpdater({
       createReactAppTimes,
       reactScriptsTimes
     ]) => {
-      return getPackageVersions(packageJson, projectType).then(({
+      let createReactAppVersions = Object.keys(createReactAppTimes);
+      let getTagVersion = _getTagVersion(createReactAppVersions);
+      return getPackageVersions(packageJson, projectType).then(co.wrap(function*({
         'create-react-app': createReactAppVersion,
         'react-scripts': reactScriptsVersion
-      }) => {
+      }) {
         let startVersion;
         let reactScriptsStartVersion;
         let startTime;
         let margin = 24 * 60 * 60 * 1000;
         if (from) {
-          startVersion = getTagVersion(from, Object.keys(createReactAppTimes));
+          startVersion = yield getTagVersion(from);
           startTime = createReactAppTimes[startVersion];
           reactScriptsStartVersion = getVersionAtTime(reactScriptsTimes, startTime, margin);
         } else {
@@ -83,7 +86,7 @@ module.exports = function createReactAppUpdater({
           reactScriptsStartVersion = reactScriptsVersion;
         }
 
-        let endVersion = getTagVersion(to, Object.keys(createReactAppTimes));
+        let endVersion = yield getTagVersion(to);
         let endTime = createReactAppTimes[endVersion];
         let adsf = getVersionAtTime(reactScriptsTimes, endTime, margin);
 
@@ -151,7 +154,7 @@ module.exports = function createReactAppUpdater({
             return run('git add package.json');
           });
         });
-      });
+      }));
     });
   });
 };
