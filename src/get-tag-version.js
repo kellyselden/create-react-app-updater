@@ -1,35 +1,18 @@
 'use strict';
 
-const utils = require('./utils');
-const semver = require('semver');
+const _getTagVersion = require('boilerplate-update/src/get-tag-version');
 
-const distTags = [
-  'latest',
-  'next',
-  'canary'
-];
-
-module.exports = function getTagVersion(to, versions) {
-  let distTag;
-  let version;
-  if (distTags.indexOf(to) > -1) {
-    distTag = to;
-  } else {
-    version = to;
-  }
-
-  if (version) {
-    let isAbsolute = semver.clean(version);
-    if (!isAbsolute) {
-      version = semver.maxSatisfying(versions, version);
-    }
-  } else {
-    let pkg = 'create-react-app';
-
-    version = JSON.parse(
-      utils.run(`npm info ${pkg}@${distTag} version --json`)
-    );
-  }
-
-  return version;
+module.exports = function getTagVersion(versions) {
+  return function getTagVersion(range) {
+    return _getTagVersion({
+      range,
+      versions,
+      packageName: 'create-react-app',
+      distTags: [
+        'latest',
+        'next',
+        'canary'
+      ]
+    });
+  };
 };
