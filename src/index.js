@@ -95,6 +95,7 @@ module.exports = function createReactAppUpdater({
 
         if (statsOnly) {
           return getApplicableCodemods({
+            url: codemodsUrl,
             projectType,
             startVersion
           }).then(codemods => {
