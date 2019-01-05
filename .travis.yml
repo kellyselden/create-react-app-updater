@@ -16,6 +16,11 @@ before_install:
 - if [ "$TRAVIS_NODE_VERSION" = "6" ]; then
     npm install -g npm@5;
   fi
+- which npx
+# don't accidentally use the global npx
+- rm $(which npx)
+# test that we can't find it
+- "! which npx"
 script:
 # - npm run lint
 - npm test
