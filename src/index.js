@@ -8,7 +8,7 @@ const getVersions = require('boilerplate-update/src/get-versions');
 const getProjectVersion = require('./get-project-version');
 const _getTagVersion = require('./get-tag-version');
 const formatStats = require('./format-stats');
-const getCodemods = require('boilerplate-update/src/get-codemods');
+const listCodemods = require('boilerplate-update/src/list-codemods');
 const getApplicableCodemods = require('boilerplate-update/src/get-applicable-codemods');
 const promptAndRunCodemods = require('boilerplate-update/src/prompt-and-run-codemods');
 const mergePackageJson = require('merge-package.json');
@@ -36,13 +36,11 @@ module.exports = function createReactAppUpdater({
   resolveConflicts,
   runCodemods: _runCodemods,
   statsOnly,
-  listCodemods
+  listCodemods: _listCodemods
 }) {
   return Promise.resolve().then(co.wrap(function*() {
-    if (listCodemods) {
-      return getCodemods(codemodsUrl).then(codemods => {
-        return JSON.stringify(codemods, null, 2);
-      });
+    if (_listCodemods) {
+      return listCodemods(codemodsUrl);
     }
 
     let packageJson = yield getPackageJson('.');
