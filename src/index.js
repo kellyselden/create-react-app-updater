@@ -1,19 +1,14 @@
 'use strict';
 
-const fs = require('fs');
 const getPackageJson = require('boilerplate-update/src/get-package-json');
 const getProjectType = require('./get-project-type');
 const getPackageVersions = require('./get-package-versions');
-const getVersions = require('boilerplate-update/src/get-versions');
-const getProjectVersion = require('./get-project-version');
 const _getTagVersion = require('./get-tag-version');
 const formatStats = require('./format-stats');
 const listCodemods = require('boilerplate-update/src/list-codemods');
 const getApplicableCodemods = require('boilerplate-update/src/get-applicable-codemods');
 const promptAndRunCodemods = require('boilerplate-update/src/prompt-and-run-codemods');
-const mergePackageJson = require('merge-package.json');
-const gitDiffApply = require('git-diff-apply');
-const run = require('./run-async');
+const boilerplateUpdate = require('boilerplate-update');
 const getStartAndEndCommands = require('./get-start-and-end-commands');
 const semver = require('semver');
 const co = require('co');
@@ -121,24 +116,13 @@ module.exports = function createReactAppUpdater({
           startCommand = commands.startCommand;
           endCommand = commands.endCommand;
 
-          return gitDiffApply({
+          return boilerplateUpdate({
             startTag,
             endTag,
             resolveConflicts,
-            ignoredFiles: ['package.json'],
             createCustomDiff: true,
             startCommand,
             endCommand
-          }).then(results => {
-            let myPackageJson = fs.readFileSync('package.json', 'utf8');
-            let fromPackageJson = results.from['package.json'];
-            let toPackageJson = results.to['package.json'];
-
-            let newPackageJson = mergePackageJson(myPackageJson, fromPackageJson, toPackageJson);
-
-            fs.writeFileSync('package.json', newPackageJson);
-
-            return run('git add package.json');
           });
         });
       }));
