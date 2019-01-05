@@ -1,9 +1,11 @@
 'use strict';
 
-const run = require('./run-async');
 const pMap = require('p-map');
 const pRetry = require('p-retry');
 const semver = require('semver');
+const npm = require('boilerplate-update/src/npm');
+const getVersions = require('boilerplate-update/src/get-versions');
+const getTimes = require('boilerplate-update/src/get-times');
 
 function crawl({
   parentVersions,
@@ -26,7 +28,7 @@ function crawl({
     }
 
     return pRetry(() => {
-      return run(`npm info ${parentPackageName}@${_parentVersion} dependencies --json`).then(results => {
+      return npm(`view ${parentPackageName}@${_parentVersion} dependencies --json`).then(results => {
         if (parentVersion) {
           return;
         }
@@ -61,22 +63,6 @@ function crawl({
   }, { concurrency: 5 }).then(() => {
     return parentVersion;
   });
-}
-
-function npm(pkg, field) {
-  return run(`npm info ${pkg} ${field} --json`).then(JSON.parse);
-}
-
-function getTimes(packageName) {
-  return npm(packageName, 'time').then(time => {
-    delete time['created'];
-    delete time['modified'];
-    return time;
-  });
-}
-
-function getVersions(packageName) {
-  return npm(packageName, 'versions');
 }
 
 function getVersionAtTime(times, time) {
