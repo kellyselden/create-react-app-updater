@@ -71,6 +71,7 @@ function createProjectFromRemote({
   options
 }) {
   return function createProject(cwd) {
+    // create-react-app doesn't work well with async npx
     utils.run(`npx create-react-app@${options.packageVersion} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
 
     return postCreateProject({
