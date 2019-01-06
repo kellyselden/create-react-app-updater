@@ -72,12 +72,7 @@ module.exports = function createReactAppUpdater({
         startTime = new Date(startTime);
         endTime = new Date(endTime);
 
-        let startTag = `v${startVersion}`;
-        let endTag = `v${endVersion}`;
-
         return boilerplateUpdate({
-          startTag,
-          endTag,
           resolveConflicts,
           statsOnly,
           runCodemods,
