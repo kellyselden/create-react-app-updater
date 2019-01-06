@@ -7,7 +7,6 @@ const _getTagVersion = require('./get-tag-version');
 const formatStats = require('./format-stats');
 const listCodemods = require('boilerplate-update/src/list-codemods');
 const getApplicableCodemods = require('boilerplate-update/src/get-applicable-codemods');
-const promptAndRunCodemods = require('boilerplate-update/src/prompt-and-run-codemods');
 const boilerplateUpdate = require('boilerplate-update');
 const getStartAndEndCommands = require('./get-start-and-end-commands');
 const semver = require('semver');
@@ -29,7 +28,7 @@ module.exports = function createReactAppUpdater({
   from,
   to,
   resolveConflicts,
-  runCodemods: _runCodemods,
+  runCodemods,
   statsOnly,
   listCodemods: _listCodemods
 }) {
@@ -70,7 +69,7 @@ module.exports = function createReactAppUpdater({
 
         let endVersion = yield getTagVersion(to);
         let endTime = createReactAppTimes[endVersion];
-        let adsf = getVersionAtTime(reactScriptsTimes, endTime, margin);
+        let reactScriptsEndVersion = getVersionAtTime(reactScriptsTimes, endTime, margin);
 
         startTime = new Date(startTime);
         endTime = new Date(endTime);
@@ -92,38 +91,25 @@ module.exports = function createReactAppUpdater({
           });
         }
 
-        if (_runCodemods) {
-          return promptAndRunCodemods({
-            url: codemodsUrl,
-            projectType,
-            startVersion
-          });
-        }
-
-        let startCommand;
-        let endCommand;
-
-        return getStartAndEndCommands({
-          projectName: packageJson.name,
+        return boilerplateUpdate({
+          startTag,
+          endTag,
+          resolveConflicts,
+          runCodemods,
+          codemodsUrl,
           projectType,
-          createReactAppStartVersion: startVersion,
-          reactScriptsStartVersion,
-          startTime,
-          createReactAppEndVersion: endVersion,
-          reactScriptsEndVersion: adsf,
-          endTime
-        }).then(commands => {
-          startCommand = commands.startCommand;
-          endCommand = commands.endCommand;
-
-          return boilerplateUpdate({
-            startTag,
-            endTag,
-            resolveConflicts,
-            createCustomDiff: true,
-            startCommand,
-            endCommand
-          });
+          startVersion,
+          createCustomDiff: true,
+          customDiffOptions: getStartAndEndCommands({
+            projectName: packageJson.name,
+            projectType,
+            createReactAppStartVersion: startVersion,
+            reactScriptsStartVersion,
+            startTime,
+            createReactAppEndVersion: endVersion,
+            reactScriptsEndVersion,
+            endTime
+          })
         });
       }));
     });
