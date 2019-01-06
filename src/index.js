@@ -4,9 +4,7 @@ const getPackageJson = require('boilerplate-update/src/get-package-json');
 const getProjectType = require('./get-project-type');
 const getPackageVersions = require('./get-package-versions');
 const _getTagVersion = require('./get-tag-version');
-const formatStats = require('./format-stats');
 const listCodemods = require('boilerplate-update/src/list-codemods');
-const getApplicableCodemods = require('boilerplate-update/src/get-applicable-codemods');
 const boilerplateUpdate = require('boilerplate-update');
 const getStartAndEndCommands = require('./get-start-and-end-commands');
 const semver = require('semver');
@@ -77,28 +75,16 @@ module.exports = function createReactAppUpdater({
         let startTag = `v${startVersion}`;
         let endTag = `v${endVersion}`;
 
-        if (statsOnly) {
-          return getApplicableCodemods({
-            url: codemodsUrl,
-            projectType,
-            startVersion
-          }).then(codemods => {
-            return formatStats({
-              startVersion,
-              endVersion,
-              codemods
-            });
-          });
-        }
-
         return boilerplateUpdate({
           startTag,
           endTag,
           resolveConflicts,
+          statsOnly,
           runCodemods,
           codemodsUrl,
           projectType,
           startVersion,
+          endVersion,
           createCustomDiff: true,
           customDiffOptions: getStartAndEndCommands({
             projectName: packageJson.name,
