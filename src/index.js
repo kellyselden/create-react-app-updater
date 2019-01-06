@@ -7,17 +7,13 @@ const _getTagVersion = require('./get-tag-version');
 const listCodemods = require('boilerplate-update/src/list-codemods');
 const boilerplateUpdate = require('boilerplate-update');
 const getStartAndEndCommands = require('./get-start-and-end-commands');
-const semver = require('semver');
 const co = require('co');
 const getTimes = require('boilerplate-update/src/get-times');
+const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
-function getVersionAtTime(times, time, margin = 0) {
+function getVersionAsOfMargin(times, time, margin = 0) {
   time = new Date(new Date(time).getTime() + margin);
-  let versionsInRange = Object.keys(times).filter(version => {
-    return new Date(times[version]) < time;
-  });
-  let version = semver.maxSatisfying(versionsInRange, '');
-  return version;
+  return getVersionAsOf(times, time);
 }
 
 const codemodsUrl = 'https://cdn.jsdelivr.net/gh/kellyselden/create-react-app-updater-codemods-manifest@vv1/manifest.json';
@@ -58,7 +54,7 @@ module.exports = function createReactAppUpdater({
         if (from) {
           startVersion = yield getTagVersion(from);
           startTime = createReactAppTimes[startVersion];
-          reactScriptsStartVersion = getVersionAtTime(reactScriptsTimes, startTime, margin);
+          reactScriptsStartVersion = getVersionAsOfMargin(reactScriptsTimes, startTime, margin);
         } else {
           startVersion = createReactAppVersion;
           startTime = reactScriptsTimes[reactScriptsVersion];
@@ -67,10 +63,7 @@ module.exports = function createReactAppUpdater({
 
         let endVersion = yield getTagVersion(to);
         let endTime = createReactAppTimes[endVersion];
-        let reactScriptsEndVersion = getVersionAtTime(reactScriptsTimes, endTime, margin);
-
-        startTime = new Date(startTime);
-        endTime = new Date(endTime);
+        let reactScriptsEndVersion = getVersionAsOfMargin(reactScriptsTimes, endTime, margin);
 
         return boilerplateUpdate({
           resolveConflicts,

@@ -6,6 +6,7 @@ const semver = require('semver');
 const npm = require('boilerplate-update/src/npm');
 const getVersions = require('boilerplate-update/src/get-versions');
 const getTimes = require('boilerplate-update/src/get-times');
+const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
 function crawl({
   parentVersions,
@@ -65,15 +66,6 @@ function crawl({
   });
 }
 
-function getVersionAtTime(times, time) {
-  time = new Date(time);
-  let versionsInRange = Object.keys(times).filter(version => {
-    return new Date(times[version]) < time;
-  });
-  let version = semver.maxSatisfying(versionsInRange, '');
-  return version;
-}
-
 module.exports = function getPackageVersion({
   dependencies,
   devDependencies
@@ -114,7 +106,7 @@ module.exports = function getPackageVersion({
 
       let reactScriptsTime = reactScriptsTimes[reactScriptsVersion];
 
-      let createReactAppVersion = getVersionAtTime(createReactAppTimes, reactScriptsTime);
+      let createReactAppVersion = getVersionAsOf(createReactAppTimes, reactScriptsTime);
 
       if (!createReactAppVersion) {
         throw 'Create React App version could not be determined';
