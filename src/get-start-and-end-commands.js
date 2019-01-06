@@ -5,7 +5,6 @@ const utils = require('./utils');
 const semver = require('semver');
 const pMap = require('p-map');
 const { spawn } = require('child_process');
-const _getStartAndEndCommands = require('boilerplate-update/src/get-start-and-end-commands');
 const getPackageVersionAsOf = require('boilerplate-update/src/get-package-version-as-of');
 
 module.exports = function getStartAndEndCommands({
@@ -22,7 +21,7 @@ module.exports = function getStartAndEndCommands({
   // utils.run(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
   // utils.run(`npm i -g ${packageName}@2.1.1`);
 
-  return _getStartAndEndCommands({
+  return {
     projectName,
     projectType,
     packageName: 'create-react-app',
@@ -39,7 +38,7 @@ module.exports = function getStartAndEndCommands({
       reactScriptsVersion: reactScriptsEndVersion,
       time: endTime
     }
-  });
+  };
 };
 
 function createProjectFromCache({
