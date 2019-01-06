@@ -5,7 +5,8 @@ const utils = require('./utils');
 const semver = require('semver');
 const pMap = require('p-map');
 const { spawn } = require('child_process');
-const getPackageVersionAsOf = require('boilerplate-update/src/get-package-version-as-of');
+const getTimes = require('boilerplate-update/src/get-times');
+const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
 module.exports = function getStartAndEndCommands({
   projectName,
@@ -133,7 +134,8 @@ function mutatePackageJson({
       }
     }
     return pMap(['react', 'react-dom'], packageName => {
-      return getPackageVersionAsOf(packageName, time).then(version => {
+      return getTimes(packageName).then(times => {
+        let version = getVersionAsOf(times, time);
         pkg.dependencies[packageName] = `^${version}`;
       });
     });
