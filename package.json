@@ -29,7 +29,7 @@
     "debug": "^4.0.0",
     "npx": "^10.0.1",
     "p-map": "^2.0.0",
-    "p-retry": "^2.0.0",
+    "p-retry": "^3.0.1",
     "resolve": "^1.8.1",
     "semver": "^5.4.1",
     "update-notifier": "^2.5.0",
