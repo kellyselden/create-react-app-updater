@@ -108,19 +108,19 @@ describe('Integration - index', function() {
     });
   });
 
-  it.skip('handles non-ember-cli app', function() {
+  it('handles non-create-react-app app', function() {
     return merge({
-      fixturesPath: 'test/fixtures/package-json/non-ember-cli'
+      fixturesPath: 'test/fixtures/package-json/non-create-react-app'
     }).then(({
       stderr
     }) => {
       expect(isGitClean({ cwd: tmpPath })).to.be.ok;
 
-      expect(stderr).to.contain('Ember CLI project type could not be determined');
+      expect(stderr).to.contain('Create React App project type could not be determined');
     });
   });
 
-  it.skip('handles non-npm dir', function() {
+  it('handles non-npm dir', function() {
     return merge({
       fixturesPath: 'test/fixtures/package-json/missing'
     }).then(({
@@ -132,7 +132,7 @@ describe('Integration - index', function() {
     });
   });
 
-  it.skip('handles malformed package.json', function() {
+  it('handles malformed package.json', function() {
     return merge({
       fixturesPath: 'test/fixtures/package-json/malformed'
     }).then(({
