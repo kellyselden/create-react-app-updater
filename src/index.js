@@ -30,7 +30,7 @@ module.exports = co.wrap(function* createReactAppUpdater({
     return yield listCodemods(codemodsUrl);
   }
 
-  let packageJson = yield getPackageJson('.');
+  let packageJson = yield getPackageJson();
   let projectType = getProjectType(packageJson);
   // let versions = getVersions();
   let [
