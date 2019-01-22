@@ -4,44 +4,55 @@ const { expect } = require('chai');
 const getProjectType = require('../../src/get-project-type');
 
 describe('Integration - getProjectType', function() {
-  it.skip('throws if not found', function() {
+  it('throws if not found', function() {
     let packageJson = {};
 
     expect(() => {
       getProjectType(packageJson);
-    }).to.throw('Ember CLI project type could not be determined');
+    }).to.throw('Create React App project type could not be determined');
   });
 
-  it.skip('detects ember app', function() {
-    let packageJson = {
-      devDependencies: {
-        'ember-cli': '2.11'
-      }
-    };
+  describe('dependencies', function() {
+    it('detects normal app', function() {
+      let packageJson = {
+        dependencies: {
+          'react-scripts': '2.11'
+        }
+      };
 
-    expect(getProjectType(packageJson)).to.equal('app');
+      expect(getProjectType(packageJson)).to.equal('normal');
+    });
+
+    it('detects ejected app', function() {
+      let packageJson = {
+        dependencies: {
+          'react-dev-utils': '2.11'
+        }
+      };
+
+      expect(getProjectType(packageJson)).to.equal('ejected');
+    });
   });
 
-  it.skip('detects ember addon', function() {
-    let packageJson = {
-      keywords: [
-        'ember-addon'
-      ],
-      devDependencies: {
-        'ember-cli': '2.11'
-      }
-    };
+  describe('devDependencies', function() {
+    it('detects normal app', function() {
+      let packageJson = {
+        devDependencies: {
+          'react-scripts': '2.11'
+        }
+      };
 
-    expect(getProjectType(packageJson)).to.equal('addon');
-  });
+      expect(getProjectType(packageJson)).to.equal('normal');
+    });
 
-  it.skip('detects glimmer app', function() {
-    let packageJson = {
-      devDependencies: {
-        '@glimmer/blueprint': '0.3'
-      }
-    };
+    it('detects ejected app', function() {
+      let packageJson = {
+        devDependencies: {
+          'react-dev-utils': '2.11'
+        }
+      };
 
-    expect(getProjectType(packageJson)).to.equal('glimmer');
+      expect(getProjectType(packageJson)).to.equal('ejected');
+    });
   });
 });
