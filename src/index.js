@@ -28,13 +28,13 @@ module.exports = function createReactAppUpdater({
 }) {
   return Promise.resolve().then(co.wrap(function*() {
     if (_listCodemods) {
-      return listCodemods(codemodsUrl);
+      return yield listCodemods(codemodsUrl);
     }
 
     let packageJson = yield getPackageJson('.');
     let projectType = getProjectType(packageJson);
     // let versions = getVersions();
-    return Promise.all([
+    return yield Promise.all([
       getTimes('create-react-app'),
       getTimes('react-scripts')
     ]).then(([
@@ -65,7 +65,7 @@ module.exports = function createReactAppUpdater({
         let endTime = createReactAppTimes[endVersion];
         let reactScriptsEndVersion = getVersionAsOfMargin(reactScriptsTimes, endTime, margin);
 
-        return boilerplateUpdate({
+        return yield boilerplateUpdate({
           resolveConflicts,
           statsOnly,
           runCodemods,
