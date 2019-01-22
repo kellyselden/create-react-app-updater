@@ -18,7 +18,7 @@ function getVersionAsOfMargin(times, time, margin = 0) {
 
 const codemodsUrl = 'https://cdn.jsdelivr.net/gh/kellyselden/create-react-app-updater-codemods-manifest@vv1/manifest.json';
 
-module.exports = function createReactAppUpdater({
+module.exports = co.wrap(function* createReactAppUpdater({
   from,
   to,
   resolveConflicts,
@@ -26,66 +26,64 @@ module.exports = function createReactAppUpdater({
   statsOnly,
   listCodemods: _listCodemods
 }) {
-  return Promise.resolve().then(co.wrap(function*() {
-    if (_listCodemods) {
-      return yield listCodemods(codemodsUrl);
-    }
+  if (_listCodemods) {
+    return yield listCodemods(codemodsUrl);
+  }
 
-    let packageJson = yield getPackageJson('.');
-    let projectType = getProjectType(packageJson);
-    // let versions = getVersions();
-    return yield Promise.all([
-      getTimes('create-react-app'),
-      getTimes('react-scripts')
-    ]).then(([
-      createReactAppTimes,
-      reactScriptsTimes
-    ]) => {
-      let createReactAppVersions = Object.keys(createReactAppTimes);
-      let getTagVersion = _getTagVersion(createReactAppVersions);
-      return getPackageVersions(packageJson, projectType).then(co.wrap(function*({
-        'create-react-app': createReactAppVersion,
-        'react-scripts': reactScriptsVersion
-      }) {
-        let startVersion;
-        let reactScriptsStartVersion;
-        let startTime;
-        let margin = 24 * 60 * 60 * 1000;
-        if (from) {
-          startVersion = yield getTagVersion(from);
-          startTime = createReactAppTimes[startVersion];
-          reactScriptsStartVersion = getVersionAsOfMargin(reactScriptsTimes, startTime, margin);
-        } else {
-          startVersion = createReactAppVersion;
-          startTime = reactScriptsTimes[reactScriptsVersion];
-          reactScriptsStartVersion = reactScriptsVersion;
-        }
+  let packageJson = yield getPackageJson('.');
+  let projectType = getProjectType(packageJson);
+  // let versions = getVersions();
+  let [
+    createReactAppTimes,
+    reactScriptsTimes
+  ] = yield Promise.all([
+    getTimes('create-react-app'),
+    getTimes('react-scripts')
+  ]);
 
-        let endVersion = yield getTagVersion(to);
-        let endTime = createReactAppTimes[endVersion];
-        let reactScriptsEndVersion = getVersionAsOfMargin(reactScriptsTimes, endTime, margin);
+  let createReactAppVersions = Object.keys(createReactAppTimes);
+  let getTagVersion = _getTagVersion(createReactAppVersions);
+  let {
+    'create-react-app': createReactAppVersion,
+    'react-scripts': reactScriptsVersion
+  } = yield getPackageVersions(packageJson, projectType);
 
-        return yield boilerplateUpdate({
-          resolveConflicts,
-          statsOnly,
-          runCodemods,
-          codemodsUrl,
-          projectType,
-          startVersion,
-          endVersion,
-          createCustomDiff: true,
-          customDiffOptions: getStartAndEndCommands({
-            projectName: packageJson.name,
-            projectType,
-            createReactAppStartVersion: startVersion,
-            reactScriptsStartVersion,
-            startTime,
-            createReactAppEndVersion: endVersion,
-            reactScriptsEndVersion,
-            endTime
-          })
-        });
-      }));
-    });
-  }));
-};
+  let startVersion;
+  let reactScriptsStartVersion;
+  let startTime;
+  let margin = 24 * 60 * 60 * 1000;
+  if (from) {
+    startVersion = yield getTagVersion(from);
+    startTime = createReactAppTimes[startVersion];
+    reactScriptsStartVersion = getVersionAsOfMargin(reactScriptsTimes, startTime, margin);
+  } else {
+    startVersion = createReactAppVersion;
+    startTime = reactScriptsTimes[reactScriptsVersion];
+    reactScriptsStartVersion = reactScriptsVersion;
+  }
+
+  let endVersion = yield getTagVersion(to);
+  let endTime = createReactAppTimes[endVersion];
+  let reactScriptsEndVersion = getVersionAsOfMargin(reactScriptsTimes, endTime, margin);
+
+  return yield boilerplateUpdate({
+    resolveConflicts,
+    statsOnly,
+    runCodemods,
+    codemodsUrl,
+    projectType,
+    startVersion,
+    endVersion,
+    createCustomDiff: true,
+    customDiffOptions: getStartAndEndCommands({
+      projectName: packageJson.name,
+      projectType,
+      createReactAppStartVersion: startVersion,
+      reactScriptsStartVersion,
+      startTime,
+      createReactAppEndVersion: endVersion,
+      reactScriptsEndVersion,
+      endTime
+    })
+  });
+});
