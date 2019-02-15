@@ -35,7 +35,8 @@ createReactAppUpdater({
   resolveConflicts,
   runCodemods,
   statsOnly,
-  listCodemods
+  listCodemods,
+  wasRunAsExecutable: true
 }).then(message => {
   if (message) {
     console.log(message);

@@ -24,7 +24,8 @@ module.exports = co.wrap(function* createReactAppUpdater({
   resolveConflicts,
   runCodemods,
   statsOnly,
-  listCodemods: _listCodemods
+  listCodemods: _listCodemods,
+  wasRunAsExecutable
 }) {
   if (_listCodemods) {
     return yield listCodemods(codemodsUrl);
@@ -66,7 +67,7 @@ module.exports = co.wrap(function* createReactAppUpdater({
   let endTime = createReactAppTimes[endVersion];
   let reactScriptsEndVersion = getVersionAsOfMargin(reactScriptsTimes, endTime, margin);
 
-  return yield boilerplateUpdate({
+  return yield (yield boilerplateUpdate({
     resolveConflicts,
     statsOnly,
     runCodemods,
@@ -84,6 +85,7 @@ module.exports = co.wrap(function* createReactAppUpdater({
       createReactAppEndVersion: endVersion,
       reactScriptsEndVersion,
       endTime
-    })
-  });
+    }),
+    wasRunAsExecutable
+  })).promise;
 });
