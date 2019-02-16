@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/kellyselden/create-react-app-updater.svg?branch=master)](https://travis-ci.org/kellyselden/create-react-app-updater)
 [![Build status](https://ci.appveyor.com/api/projects/status/y8ua3584brlpcrpb/branch/master?svg=true)](https://ci.appveyor.com/project/kellyselden/create-react-app-updater/branch/master)
 
-Update [Create React App](https://facebook.github.io/create-react-app/) projects
+Update [Create React App](https://facebook.github.io/create-react-app/) projects. Uses [create-react-app-updater-codemods-manifest](https://github.com/kellyselden/create-react-app-updater-codemods-manifest) for its codemod list.
 
 Ported from [ember-cli-update](https://github.com/ember-cli/ember-cli-update)
 
