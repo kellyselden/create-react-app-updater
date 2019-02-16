@@ -16,7 +16,7 @@ function getVersionAsOfMargin(times, time, margin = 0) {
   return getVersionAsOf(times, time);
 }
 
-const codemodsUrl = 'https://cdn.jsdelivr.net/gh/kellyselden/create-react-app-updater-codemods-manifest@vv1/manifest.json';
+const codemodsUrl = 'https://raw.githubusercontent.com/kellyselden/create-react-app-updater-codemods-manifest/v1/manifest.json';
 
 module.exports = co.wrap(function* createReactAppUpdater({
   from,
