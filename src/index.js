@@ -72,6 +72,7 @@ module.exports = co.wrap(function* createReactAppUpdater({
     statsOnly,
     runCodemods,
     codemodsUrl,
+    packageJson,
     projectOptions: [projectType],
     startVersion,
     endVersion,
