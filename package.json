@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "bin": {
-    "create-react-app-updater": "bin/index.js"
+    "create-react-app-updater": "bin/index.js",
+    "cra-update": "bin/index.js"
   },
   "scripts": {
     "lint": "eslint .",
