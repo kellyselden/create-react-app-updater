@@ -24,7 +24,11 @@ Inside your project directory, if you installed globally run
 
 `create-react-app-updater`
 
-or if you want to use [npx](https://www.npmjs.com/package/npx) run
+or the shorter
+
+`cra-update`
+
+If you want to use [npx](https://www.npmjs.com/package/npx) run
 
 `npx create-react-app-updater`
 
@@ -41,13 +45,13 @@ This tool can also run codemods for you. The option `--run-codemods` will figure
 To update to the latest version of Create React App:
 
 ```
-create-react-app-updater
+cra-update
 ```
 
 To update to a certain version of Create React App:
 
 ```
-create-react-app-updater --to 2.1.1
+cra-update --to 2.1.1
 ```
 
 To run codemods:
@@ -55,7 +59,7 @@ To run codemods:
 (This should be run after running the normal update shown above, and after you've resolved any conflicts.)
 
 ```
-create-react-app-updater --run-codemods
+cra-update --run-codemods
 ```
 
 ## Options
