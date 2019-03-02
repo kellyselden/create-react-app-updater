@@ -11,6 +11,7 @@ const from = argv['from'];
 const to = argv['to'];
 const resolveConflicts = argv['resolve-conflicts'];
 const runCodemods = argv['run-codemods'];
+const reset = argv['reset'];
 const statsOnly = argv['stats-only'];
 const listCodemods = argv['list-codemods'];
 
@@ -34,6 +35,7 @@ createReactAppUpdater({
   to,
   resolveConflicts,
   runCodemods,
+  reset,
   statsOnly,
   listCodemods,
   wasRunAsExecutable: true

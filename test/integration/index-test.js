@@ -175,7 +175,9 @@ describe('Integration - index', function() {
     });
   });
 
-  it.skip('resets app', function() {
+  (shouldRunUpdateTests ? it : it.skip)('resets app', function() {
+    this.timeout(5 * 60 * 1000);
+
     return merge({
       fixturesPath: 'test/fixtures/local/my-app',
       reset: true
@@ -186,7 +188,7 @@ describe('Integration - index', function() {
         mergeFixtures: 'test/fixtures/reset/my-app'
       });
 
-      expect(status).to.match(/^ D app\/controllers\/application\.js$/m);
+      expect(status).to.match(/^\?{2} src\/serviceWorker\.js$/m);
 
       assertNoStaged(status);
     });
