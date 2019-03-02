@@ -276,7 +276,7 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
   });
 
   (shouldRunUpdateTests ? it : it.skip)('can update a normal app', function() {
-    this.timeout(60 * 60 * 1000);
+    this.timeout(5 * 60 * 1000);
 
     return merge({
       fixturesPath: 'test/fixtures/local/my-app'
@@ -292,7 +292,7 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
   });
 
   (shouldRunUpdateTests ? it : it.skip)('can update an ejected app', function() {
-    this.timeout(60 * 60 * 1000);
+    this.timeout(5 * 60 * 1000);
 
     return merge({
       fixturesPath: 'test/fixtures/local/ejected-app'
