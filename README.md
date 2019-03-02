@@ -8,6 +8,8 @@ Update [Create React App](https://facebook.github.io/create-react-app/) projects
 
 Fetches list of codemods and instructions from [create-react-app-updater-codemods-manifest](https://github.com/kellyselden/create-react-app-updater-codemods-manifest)
 
+This is a thin wrapper of [boilerplate-update](https://github.com/kellyselden/boilerplate-update).
+
 Ported from [ember-cli-update](https://github.com/ember-cli/ember-cli-update)
 
 ## Installation
