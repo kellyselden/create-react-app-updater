@@ -23,6 +23,7 @@ module.exports = co.wrap(function* createReactAppUpdater({
   to,
   resolveConflicts,
   runCodemods,
+  reset,
   statsOnly,
   listCodemods: _listCodemods,
   wasRunAsExecutable
@@ -69,6 +70,7 @@ module.exports = co.wrap(function* createReactAppUpdater({
 
   return yield (yield boilerplateUpdate({
     resolveConflicts,
+    reset,
     statsOnly,
     runCodemods,
     codemodsUrl,

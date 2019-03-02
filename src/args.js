@@ -18,6 +18,11 @@ module.exports = {
     default: false,
     description: 'Run codemods to help update your code'
   },
+  'reset': {
+    type: 'boolean',
+    default: false,
+    description: 'Reset your code to the default boilerplate at the new version'
+  },
   'stats-only': {
     type: 'boolean',
     default: false,

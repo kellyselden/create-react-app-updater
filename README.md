@@ -72,6 +72,7 @@ cra-update --run-codemods
 | --to | Update to a version that isn\'t latest | String | "2.14.1" "~2.15" "latest" "beta" | "latest" |
 | --resolve-conflicts | Automatically run git mergetool if conflicts found | Boolean | | false |
 | --run-codemods | Run codemods to help update your code | Boolean | | false |
+| --reset | Reset your code to the default boilerplate at the new version | Boolean | | false |
 | --compare-only | Show the changes between different versions without updating | Boolean | | false |
 | --stats-only | Show all calculated values regarding your project | Boolean | | false |
 | --list-codemods | List available codemods | Boolean | | false |
