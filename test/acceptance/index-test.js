@@ -3,19 +3,18 @@
 // const fs = require('fs-extra');
 // const path = require('path');
 const { expect } = require('chai');
+const co = require('co');
 const {
+  buildTmp,
   processBin,
   fixtureCompare: _fixtureCompare
 } = require('git-fixtures');
-const buildTmp = require('../helpers/build-tmp');
 const {
   assertNormalUpdate,
   assertNoUnstaged,
   assertCodemodRan
 } = require('../helpers/assertions');
 const semver = require('semver');
-
-const commitMessage = 'add files';
 
 const shouldSkipCodemods = process.platform === 'linux' && semver.satisfies(semver.valid(process.version), '6');
 
@@ -24,12 +23,13 @@ describe('Acceptance - index', function() {
 
   let tmpPath;
 
-  function merge({
+  let merge = co.wrap(function* merge({
     fixturesPath,
     runCodemods,
-    subDir = ''
+    subDir = '',
+    commitMessage
   }) {
-    tmpPath = buildTmp({
+    tmpPath = yield buildTmp({
       fixturesPath,
       commitMessage,
       subDir
@@ -52,7 +52,7 @@ describe('Acceptance - index', function() {
       commitMessage,
       expect
     });
-  }
+  });
 
   function fixtureCompare({
     mergeFixtures
@@ -97,14 +97,15 @@ describe('Acceptance - index', function() {
     });
   });
 
-  (shouldSkipCodemods ? it.skip : it)('runs codemods', function() {
+  (shouldSkipCodemods ? it.skip : it)('runs codemods', co.wrap(function*() {
     this.timeout(5 * 60 * 1000);
 
     let {
       ps,
       promise
-    } = merge({
+    } = yield merge({
       fixturesPath: 'test/fixtures/codemod/before',
+      commitMessage: 'my-app',
       runCodemods: true
     });
 
@@ -115,25 +116,25 @@ describe('Acceptance - index', function() {
       }
     });
 
-    return promise.then(({
+    let {
       status
-    }) => {
-      // file is indeterminent between OS's, so ignore
-      // fs.removeSync(path.join(tmpPath, 'MODULE_REPORT.md'));
+    } = yield promise;
 
-      let mergeFixtures = 'test/fixtures/codemod/latest-node';
-      if (process.env.NODE_LTS) {
-        mergeFixtures = 'test/fixtures/codemod/min-node';
-      }
+    // file is indeterminent between OS's, so ignore
+    // fs.removeSync(path.join(tmpPath, 'MODULE_REPORT.md'));
 
-      fixtureCompare({
-        mergeFixtures
-      });
+    let mergeFixtures = 'test/fixtures/codemod/latest-node/my-app';
+    if (process.env.NODE_LTS) {
+      mergeFixtures = 'test/fixtures/codemod/min-node/my-app';
+    }
 
-      assertNoUnstaged(status);
-      assertCodemodRan(status);
+    fixtureCompare({
+      mergeFixtures
     });
-  });
+
+    assertNoUnstaged(status);
+    assertCodemodRan(status);
+  }));
 
   it.skip('scopes to sub dir if run from there', function() {
     return merge({
