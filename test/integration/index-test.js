@@ -3,21 +3,20 @@
 const path = require('path');
 const { expect } = require('chai');
 const sinon = require('sinon');
+const co = require('co');
 const {
+  buildTmp,
   processExit,
   fixtureCompare: _fixtureCompare
 } = require('git-fixtures');
 const { isGitClean } = require('git-diff-apply');
 const createReactAppUpdater = require('../../src');
 const utils = require('../../src/utils');
-const buildTmp = require('../helpers/build-tmp');
 const {
   assertNoUnstaged,
   assertNoStaged
 } = require('../helpers/assertions');
 const semver = require('semver');
-
-const commitMessage = 'add files';
 
 const shouldRunUpdateTests = semver.major(process.version) >= 8;
 
@@ -42,7 +41,7 @@ describe('Integration - index', function() {
     process.chdir(cwd);
   });
 
-  function merge({
+  let merge = co.wrap(function* merge({
     fixturesPath,
     dirty,
     from,
@@ -51,9 +50,10 @@ describe('Integration - index', function() {
     compareOnly,
     statsOnly,
     runCodemods,
-    listCodemods
+    listCodemods,
+    commitMessage
   }) {
-    tmpPath = buildTmp({
+    tmpPath = yield buildTmp({
       fixturesPath,
       commitMessage,
       dirty
@@ -77,7 +77,7 @@ describe('Integration - index', function() {
       commitMessage,
       expect
     });
-  }
+  });
 
   function fixtureCompare({
     mergeFixtures
@@ -110,7 +110,8 @@ describe('Integration - index', function() {
 
   it('handles non-create-react-app app', function() {
     return merge({
-      fixturesPath: 'test/fixtures/package-json/non-create-react-app'
+      fixturesPath: 'test/fixtures/package-json/non-create-react-app',
+      commitMessage: 'my-app'
     }).then(({
       stderr
     }) => {
@@ -122,7 +123,8 @@ describe('Integration - index', function() {
 
   it('handles non-npm dir', function() {
     return merge({
-      fixturesPath: 'test/fixtures/package-json/missing'
+      fixturesPath: 'test/fixtures/package-json/missing',
+      commitMessage: 'my-app'
     }).then(({
       stderr
     }) => {
@@ -134,7 +136,8 @@ describe('Integration - index', function() {
 
   it('handles malformed package.json', function() {
     return merge({
-      fixturesPath: 'test/fixtures/package-json/malformed'
+      fixturesPath: 'test/fixtures/package-json/malformed',
+      commitMessage: 'my-app'
     }).then(({
       stderr
     }) => {
@@ -179,13 +182,14 @@ describe('Integration - index', function() {
     this.timeout(5 * 60 * 1000);
 
     return merge({
-      fixturesPath: 'test/fixtures/local/my-app',
+      fixturesPath: 'test/fixtures/normal/local',
+      commitMessage: 'my-app',
       reset: true
     }).then(({
       status
     }) => {
       fixtureCompare({
-        mergeFixtures: 'test/fixtures/reset/my-app'
+        mergeFixtures: 'test/fixtures/normal/reset/my-app'
       });
 
       expect(status).to.match(/^\?{2} src\/serviceWorker\.js$/m);
@@ -281,12 +285,13 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
     this.timeout(5 * 60 * 1000);
 
     return merge({
-      fixturesPath: 'test/fixtures/local/my-app'
+      fixturesPath: 'test/fixtures/normal/local',
+      commitMessage: 'my-app'
     }).then(({
       status
     }) => {
       fixtureCompare({
-        mergeFixtures: 'test/fixtures/merge/my-app'
+        mergeFixtures: 'test/fixtures/normal/merge/my-app'
       });
 
       assertNoUnstaged(status);
@@ -297,12 +302,13 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
     this.timeout(5 * 60 * 1000);
 
     return merge({
-      fixturesPath: 'test/fixtures/local/ejected-app'
+      fixturesPath: 'test/fixtures/ejected/local',
+      commitMessage: 'my-app'
     }).then(({
       status
     }) => {
       fixtureCompare({
-        mergeFixtures: 'test/fixtures/merge/ejected-app'
+        mergeFixtures: 'test/fixtures/ejected/merge/my-app'
       });
 
       assertNoUnstaged(status);
