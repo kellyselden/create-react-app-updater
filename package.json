@@ -46,7 +46,7 @@
     "eslint-plugin-prefer-let": "kellyselden/eslint-plugin-prefer-let#const-require",
     "fs-extra": "^7.0.0",
     "git-diff-apply": "^0.14.0",
-    "git-fixtures": "^0.13.0",
+    "git-fixtures": "^0.14.0",
     "mocha": "^6.0.0",
     "renovate-config-standard": "^2.0.0",
     "sinon": "^7.0.0",
