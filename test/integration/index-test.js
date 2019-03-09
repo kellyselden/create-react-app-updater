@@ -9,9 +9,7 @@ const {
   processExit,
   fixtureCompare: _fixtureCompare
 } = require('git-fixtures');
-const { isGitClean } = require('git-diff-apply');
 const createReactAppUpdater = require('../../src');
-const utils = require('../../src/utils');
 const {
   assertNoUnstaged,
   assertNoStaged
@@ -92,61 +90,6 @@ describe('Integration - index', function() {
     });
   }
 
-  it.skip('handles dirty', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/local/my-app',
-      dirty: true
-    }).then(({
-      status,
-      stderr
-    }) => {
-      expect(status).to.equal(`?? a-random-new-file
-`);
-
-      expect(stderr).to.contain('You must start with a clean working directory');
-      expect(stderr).to.not.contain('UnhandledPromiseRejectionWarning');
-    });
-  });
-
-  it('handles non-create-react-app app', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/package-json/non-create-react-app',
-      commitMessage: 'my-app'
-    }).then(({
-      stderr
-    }) => {
-      expect(isGitClean({ cwd: tmpPath })).to.be.ok;
-
-      expect(stderr).to.contain('Create React App project type could not be determined');
-    });
-  });
-
-  it('handles non-npm dir', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/package-json/missing',
-      commitMessage: 'my-app'
-    }).then(({
-      stderr
-    }) => {
-      expect(isGitClean({ cwd: tmpPath })).to.be.ok;
-
-      expect(stderr).to.contain('No package.json was found in this directory');
-    });
-  });
-
-  it('handles malformed package.json', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/package-json/malformed',
-      commitMessage: 'my-app'
-    }).then(({
-      stderr
-    }) => {
-      expect(isGitClean({ cwd: tmpPath })).to.be.ok;
-
-      expect(stderr).to.contain('The package.json is malformed');
-    });
-  });
-
   (shouldRunUpdateTests ? it : it.skip)('resets app', function() {
     this.timeout(5 * 60 * 1000);
 
@@ -167,22 +110,10 @@ describe('Integration - index', function() {
     });
   });
 
-  it.skip('resolves semver ranges', function() {
-    let opn = sandbox.stub(utils, 'opn');
-
+  it('shows stats only', function() {
     return merge({
-      fixturesPath: 'test/fixtures/local/my-app',
-      from: '2.11',
-      to: '^2',
-      compareOnly: true
-    }).then(() => {
-      expect(opn.args[0][0]).to.equal('https://github.com/ember-cli/ember-new-output/compare/v2.11.1...v2.18.2');
-    });
-  });
-
-  it.skip('shows stats only', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/local/my-app',
+      fixturesPath: 'test/fixtures/normal/local',
+      commitMessage: 'my-app',
       statsOnly: true
     }).then(({
       result,
@@ -190,36 +121,17 @@ describe('Integration - index', function() {
     }) => {
       assertNoStaged(status);
 
-      expect(result).to.equal(`project type: app
-from version: 2.11.1
-to version: 3.2.0-beta.1
-output repo: https://github.com/ember-cli/ember-new-output
-applicable codemods: `);
+      expect(result).to.equal(`project options: normal
+from version: 1.0.0
+to version: 2.1.1
+applicable codemods: create-element-to-jsx`);
     });
   });
 
-  // this one can be removed once the above starts returning codemods
-  it.skip('shows stats only - codemods', function() {
+  it('lists codemods', function() {
     return merge({
-      fixturesPath: 'test/fixtures/codemod/min-node/my-app',
-      statsOnly: true
-    }).then(({
-      result,
-      status
-    }) => {
-      assertNoStaged(status);
-
-      expect(result).to.equal(`project type: app
-from version: 3.2.0-beta.1
-to version: 3.2.0-beta.1
-output repo: https://github.com/ember-cli/ember-new-output
-applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-helpers-codemod, es5-getter-ember-codemod, qunit-dom-codemod`);
-    });
-  });
-
-  it.skip('lists codemods', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/local/my-app',
+      fixturesPath: 'test/fixtures/normal/local',
+      commitMessage: 'my-app',
       listCodemods: true
     }).then(({
       result,
@@ -227,7 +139,7 @@ applicable codemods: ember-modules-codemod, ember-qunit-codemod, ember-test-help
     }) => {
       assertNoStaged(status);
 
-      expect(JSON.parse(result)).to.have.own.property('ember-modules-codemod');
+      expect(JSON.parse(result)).to.have.own.property('create-element-to-jsx');
     });
   });
 
