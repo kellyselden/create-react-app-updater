@@ -147,37 +147,6 @@ describe('Integration - index', function() {
     });
   });
 
-  it.skip('updates glimmer app', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/local/glimmer-app',
-      from: '0.5.0',
-      to: '0.6.1'
-    }).then(({
-      status
-    }) => {
-      fixtureCompare({
-        mergeFixtures: 'test/fixtures/merge/glimmer-app'
-      });
-
-      expect(status).to.match(/^M {2}src\/index\.ts$/m);
-
-      assertNoUnstaged(status);
-    });
-  });
-
-  it.skip('needs --from if glimmer app before 0.6.3', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/local/glimmer-app',
-      to: '0.6.1'
-    }).then(({
-      stderr
-    }) => {
-      expect(isGitClean({ cwd: tmpPath })).to.be.ok;
-
-      expect(stderr).to.contain('version cannot be determined');
-    });
-  });
-
   (shouldRunUpdateTests ? it : it.skip)('resets app', function() {
     this.timeout(5 * 60 * 1000);
 
@@ -195,25 +164,6 @@ describe('Integration - index', function() {
       expect(status).to.match(/^\?{2} src\/serviceWorker\.js$/m);
 
       assertNoStaged(status);
-    });
-  });
-
-  it.skip('opens compare url', function() {
-    let opn = sandbox.stub(utils, 'opn');
-
-    return merge({
-      fixturesPath: 'test/fixtures/local/my-app',
-      compareOnly: true
-    }).then(({
-      result,
-      status
-    }) => {
-      assertNoUnstaged(status);
-
-      expect(result, 'don\'t accidentally print anything to the console').to.be.undefined;
-
-      expect(opn.calledOnce).to.be.ok;
-      expect(opn.args[0][0]).to.equal('https://github.com/ember-cli/ember-new-output/compare/v2.11.1...v3.2.0-beta.1');
     });
   });
 

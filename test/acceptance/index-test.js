@@ -82,21 +82,6 @@ describe('Acceptance - index', function() {
     });
   });
 
-  it.skip('updates addon', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/local/my-addon'
-    }).promise.then(({
-      status
-    }) => {
-      fixtureCompare({
-        mergeFixtures: 'test/fixtures/merge/my-addon'
-      });
-
-      assertNormalUpdate(status);
-      assertNoUnstaged(status);
-    });
-  });
-
   (shouldSkipCodemods ? it.skip : it)('runs codemods', co.wrap(function*() {
     this.timeout(5 * 60 * 1000);
 
