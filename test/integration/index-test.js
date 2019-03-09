@@ -110,6 +110,22 @@ describe('Integration - index', function() {
     });
   });
 
+  it('resolves semver ranges', function() {
+    return merge({
+      fixturesPath: 'test/fixtures/normal/local',
+      commitMessage: 'my-app',
+      from: '< 1',
+      to: '2.0.*',
+      statsOnly: true
+    }).then(({
+      result
+    }) => {
+      expect(result).to.include(`
+from version: 0.7.0
+to version: 2.0.4`);
+    });
+  });
+
   it('shows stats only', function() {
     return merge({
       fixturesPath: 'test/fixtures/normal/local',
