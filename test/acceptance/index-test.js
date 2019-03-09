@@ -120,20 +120,4 @@ describe('Acceptance - index', function() {
     assertNoUnstaged(status);
     assertCodemodRan(status);
   }));
-
-  it.skip('scopes to sub dir if run from there', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/local/my-app',
-      subDir: 'foo/bar'
-    }).promise.then(({
-      status
-    }) => {
-      fixtureCompare({
-        mergeFixtures: 'test/fixtures/merge/my-app'
-      });
-
-      assertNormalUpdate(status);
-      assertNoUnstaged(status);
-    });
-  });
 });
