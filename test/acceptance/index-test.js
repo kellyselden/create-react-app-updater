@@ -1,8 +1,9 @@
 'use strict';
 
+const { describe, it } = require('../helpers/mocha');
+const { expect } = require('chai');
 // const fs = require('fs-extra');
 // const path = require('path');
-const { expect } = require('chai');
 const co = require('co');
 const {
   buildTmp,
@@ -18,7 +19,7 @@ const semver = require('semver');
 
 const shouldSkipCodemods = process.platform === 'linux' && semver.satisfies(semver.valid(process.version), '6');
 
-describe('Acceptance - index', function() {
+describe(function() {
   this.timeout(30 * 1000);
 
   let tmpPath;
