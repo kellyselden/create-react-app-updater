@@ -23,10 +23,30 @@ describe('Unit - getProjectType', function() {
       expect(getProjectType(packageJson)).to.equal('normal');
     });
 
+    it('detects normal app with empty string', function() {
+      let packageJson = {
+        dependencies: {
+          'react-scripts': ''
+        }
+      };
+
+      expect(getProjectType(packageJson)).to.equal('normal');
+    });
+
     it('detects ejected app', function() {
       let packageJson = {
         dependencies: {
           'react-dev-utils': '2.11'
+        }
+      };
+
+      expect(getProjectType(packageJson)).to.equal('ejected');
+    });
+
+    it('detects ejected app with empty string', function() {
+      let packageJson = {
+        dependencies: {
+          'react-dev-utils': ''
         }
       };
 
@@ -45,10 +65,30 @@ describe('Unit - getProjectType', function() {
       expect(getProjectType(packageJson)).to.equal('normal');
     });
 
+    it('detects normal app with empty string', function() {
+      let packageJson = {
+        devDependencies: {
+          'react-scripts': ''
+        }
+      };
+
+      expect(getProjectType(packageJson)).to.equal('normal');
+    });
+
     it('detects ejected app', function() {
       let packageJson = {
         devDependencies: {
           'react-dev-utils': '2.11'
+        }
+      };
+
+      expect(getProjectType(packageJson)).to.equal('ejected');
+    });
+
+    it('detects ejected app with empty string', function() {
+      let packageJson = {
+        devDependencies: {
+          'react-dev-utils': ''
         }
       };
 
