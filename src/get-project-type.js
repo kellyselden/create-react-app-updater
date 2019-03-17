@@ -4,15 +4,19 @@ module.exports = function getProjectType({
   dependencies,
   devDependencies
 }) {
+  function checkForDep(packageName) {
+    return allDeps[packageName] !== undefined;
+  }
+
   let allDeps = Object.assign({}, dependencies, devDependencies);
 
-  let isNormal = !!allDeps['react-scripts'];
+  let isNormal = checkForDep('react-scripts');
 
   if (isNormal) {
     return 'normal';
   }
 
-  let isEjected = !!allDeps['react-dev-utils'];
+  let isEjected = checkForDep('react-dev-utils');
 
   if (isEjected) {
     return 'ejected';
