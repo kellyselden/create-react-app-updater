@@ -2,9 +2,7 @@
 
 const path = require('path');
 const utils = require('./utils');
-const semver = require('semver');
 const pMap = require('p-map');
-const { spawn } = require('child_process');
 const getTimes = require('boilerplate-update/src/get-times');
 const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
@@ -19,8 +17,8 @@ module.exports = function getStartAndEndCommands({
   endTime
 }) {
   // test
-  // utils.run(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
-  // utils.run(`npm i -g ${packageName}@2.1.1`);
+  // require('./run')(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
+  // require('./run')(`npm i -g ${packageName}@2.1.1`);
 
   return {
     projectName,
@@ -47,17 +45,13 @@ function createProjectFromCache({
   options
 }) {
   return function createProject(cwd) {
-    let ps = spawn('node', [
+    return utils.spawn('node', [
       path.join(packageRoot, 'index.js'),
       options.projectName,
       '--scripts-version',
       options.reactScriptsVersion
     ], {
       cwd
-    });
-
-    return new Promise(resolve => {
-      ps.on('exit', resolve);
     }).then(() => {
       return postCreateProject({
         cwd,
@@ -72,7 +66,7 @@ function createProjectFromRemote({
 }) {
   return function createProject(cwd) {
     // create-react-app doesn't work well with async npx
-    utils.run(`npx create-react-app@${options.packageVersion} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
+    utils.npxSync(`create-react-app@${options.packageVersion} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
 
     return postCreateProject({
       cwd,
@@ -96,20 +90,9 @@ function postCreateProject({
       return;
     }
 
-    let ps = spawn('node', [
-      'node_modules/react-scripts/bin/react-scripts.js',
-      'eject'
-    ], {
-      cwd: appPath
-    });
-
-    ps.stdin.write('y\n');
-    if (semver.lte(reactScriptsVersion, '0.8.1')) {
-      ps.stdin.end();
-    }
-
-    return new Promise(resolve => {
-      ps.on('exit', resolve);
+    return utils.eject({
+      cwd: appPath,
+      reactScriptsVersion
     });
   }).then(() => {
     return appPath;
