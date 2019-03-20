@@ -19,7 +19,7 @@ const semver = require('semver');
 
 const shouldRunUpdateTests = semver.major(process.version) >= 8;
 
-describe('Integration - index', function() {
+describe(function() {
   this.timeout(30 * 1000);
 
   let cwd;
