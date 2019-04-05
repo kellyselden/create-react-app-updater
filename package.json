@@ -25,7 +25,7 @@
     "node": ">= 6"
   },
   "dependencies": {
-    "boilerplate-update": "^0.19.5",
+    "boilerplate-update": "^0.19.9",
     "co": "^4.6.0",
     "debug": "^4.1.1",
     "npx": "^10.2.0",
