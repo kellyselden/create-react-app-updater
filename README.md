@@ -12,6 +12,8 @@ This is a thin wrapper of [boilerplate-update](https://github.com/kellyselden/bo
 
 Ported from [ember-cli-update](https://github.com/ember-cli/ember-cli-update)
 
+https://www.youtube.com/watch?v=pgS3-F0sXeM
+
 ## Installation
 
 As a global executable:
