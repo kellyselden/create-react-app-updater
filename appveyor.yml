@@ -1,6 +1,5 @@
 environment:
   matrix:
-    - nodejs_version: "6"
     - nodejs_version: "8"
     - nodejs_version: ""
 
@@ -16,10 +15,6 @@ init:
 install:
   - ps: Install-Product node $env:nodejs_version
   - npm config set spin false
-  - ps: >-
-      if ($env:nodejs_version -eq "6") {
-        npm install -g npm@5
-      }
   - where npx
   # don't accidentally use the global npx
   - ps: rm "C:\Program Files (x86)\nodejs\npx*"
