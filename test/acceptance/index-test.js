@@ -34,8 +34,7 @@ describe(function() {
     });
 
     let args = [
-      '--to',
-      '2.1.1'
+      '--to=2.1.1'
     ];
     if (runCodemods) {
       args = [
@@ -65,19 +64,22 @@ describe(function() {
     });
   }
 
-  it.skip('updates app', function() {
-    return merge({
-      fixturesPath: 'test/fixtures/local/my-app'
-    }).promise.then(({
-      status
-    }) => {
-      fixtureCompare({
-        mergeFixtures: 'test/fixtures/merge/my-app'
-      });
+  it('works', async function() {
+    this.timeout(5 * 60 * 1000);
 
-      assertNormalUpdate(status);
-      assertNoUnstaged(status);
+    let {
+      status
+    } = await (await merge({
+      fixturesPath: 'test/fixtures/normal/local',
+      commitMessage: 'my-app'
+    })).promise;
+
+    fixtureCompare({
+      mergeFixtures: 'test/fixtures/normal/merge/my-app'
     });
+
+    assertNormalUpdate(status);
+    assertNoUnstaged(status);
   });
 
   it('runs codemods', co.wrap(function*() {
