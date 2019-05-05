@@ -2,9 +2,6 @@
 
 const { describe, it } = require('../helpers/mocha');
 const { expect } = require('chai');
-// const fs = require('fs-extra');
-// const path = require('path');
-const co = require('co');
 const {
   buildTmp,
   processBin,
@@ -21,13 +18,13 @@ describe(function() {
 
   let tmpPath;
 
-  let merge = co.wrap(function* merge({
+  async function merge({
     fixturesPath,
     runCodemods,
     subDir = '',
     commitMessage
   }) {
-    tmpPath = yield buildTmp({
+    tmpPath = await buildTmp({
       fixturesPath,
       commitMessage,
       subDir
@@ -42,14 +39,14 @@ describe(function() {
       ];
     }
 
-    return processBin({
+    return await processBin({
       binFile: 'index',
       args,
       cwd: tmpPath,
       commitMessage,
       expect
     });
-  });
+  }
 
   function fixtureCompare({
     mergeFixtures
@@ -82,13 +79,13 @@ describe(function() {
     assertNoUnstaged(status);
   });
 
-  it('runs codemods', co.wrap(function*() {
+  it('runs codemods', async function() {
     this.timeout(5 * 60 * 1000);
 
     let {
       ps,
       promise
-    } = yield merge({
+    } = await merge({
       fixturesPath: 'test/fixtures/codemod/before',
       commitMessage: 'my-app',
       runCodemods: true
@@ -103,7 +100,7 @@ describe(function() {
 
     let {
       status
-    } = yield promise;
+    } = await promise;
 
     // file is indeterminent between OS's, so ignore
     // fs.removeSync(path.join(tmpPath, 'MODULE_REPORT.md'));
@@ -119,5 +116,5 @@ describe(function() {
 
     assertNoUnstaged(status);
     assertCodemodRan(status);
-  }));
+  });
 });

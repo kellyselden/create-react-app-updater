@@ -5,7 +5,6 @@ const getPackageVersions = require('./get-package-versions');
 const _getTagVersion = require('./get-tag-version');
 const boilerplateUpdate = require('boilerplate-update');
 const getStartAndEndCommands = require('./get-start-and-end-commands');
-const co = require('co');
 const getTimes = require('boilerplate-update/src/get-times');
 const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
@@ -14,7 +13,7 @@ function getVersionAsOfMargin(times, time, margin = 0) {
   return getVersionAsOf(times, time);
 }
 
-module.exports = co.wrap(function* createReactAppUpdater({
+module.exports = async function createReactAppUpdater({
   from,
   to,
   resolveConflicts,
@@ -24,7 +23,7 @@ module.exports = co.wrap(function* createReactAppUpdater({
   listCodemods,
   wasRunAsExecutable
 }) {
-  return yield (yield boilerplateUpdate({
+  return await (await boilerplateUpdate({
     projectOptions: ({ packageJson }) => [getProjectType(packageJson)],
     resolveConflicts,
     reset,
@@ -33,15 +32,14 @@ module.exports = co.wrap(function* createReactAppUpdater({
     runCodemods,
     codemodsUrl: 'https://raw.githubusercontent.com/kellyselden/create-react-app-updater-codemods-manifest/v2/manifest.json',
     createCustomDiff: true,
-    mergeOptions: co.wrap(function* mergeOptions({
+    mergeOptions: async function mergeOptions({
       packageJson,
       projectOptions: [projectType]
     }) {
-      // let versions = getVersions();
       let [
         createReactAppTimes,
         reactScriptsTimes
-      ] = yield Promise.all([
+      ] = await Promise.all([
         getTimes('create-react-app'),
         getTimes('react-scripts')
       ]);
@@ -51,14 +49,14 @@ module.exports = co.wrap(function* createReactAppUpdater({
       let {
         'create-react-app': createReactAppVersion,
         'react-scripts': reactScriptsVersion
-      } = yield getPackageVersions(packageJson, projectType);
+      } = await getPackageVersions(packageJson, projectType);
 
       let startVersion;
       let reactScriptsStartVersion;
       let startTime;
       let margin = 24 * 60 * 60 * 1000;
       if (from) {
-        startVersion = yield getTagVersion(from);
+        startVersion = await getTagVersion(from);
         startTime = createReactAppTimes[startVersion];
         reactScriptsStartVersion = getVersionAsOfMargin(reactScriptsTimes, startTime, margin);
       } else {
@@ -67,7 +65,7 @@ module.exports = co.wrap(function* createReactAppUpdater({
         reactScriptsStartVersion = reactScriptsVersion;
       }
 
-      let endVersion = yield getTagVersion(to);
+      let endVersion = await getTagVersion(to);
       let endTime = createReactAppTimes[endVersion];
       let reactScriptsEndVersion = getVersionAsOfMargin(reactScriptsTimes, endTime, margin);
 
@@ -85,7 +83,7 @@ module.exports = co.wrap(function* createReactAppUpdater({
           endTime
         })
       };
-    }),
+    },
     wasRunAsExecutable
   })).promise;
-});
+};

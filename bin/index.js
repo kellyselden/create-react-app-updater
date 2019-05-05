@@ -30,17 +30,23 @@ updateNotifier({
   }
 }).notify();
 
-createReactAppUpdater({
-  from,
-  to,
-  resolveConflicts,
-  runCodemods,
-  reset,
-  statsOnly,
-  listCodemods,
-  wasRunAsExecutable: true
-}).then(message => {
-  if (message) {
-    console.log(message);
+(async() => {
+  try {
+    let message = await createReactAppUpdater({
+      from,
+      to,
+      resolveConflicts,
+      runCodemods,
+      reset,
+      statsOnly,
+      listCodemods,
+      wasRunAsExecutable: true
+    });
+
+    if (message) {
+      console.log(message);
+    }
+  } catch (err) {
+    console.error(err);
   }
-}).catch(console.error);
+})();

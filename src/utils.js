@@ -6,10 +6,10 @@ module.exports.npxSync = function npxSync(command, ...args) {
   return require('./run')(`npx ${command}`, ...args);
 };
 
-module.exports.spawn = function spawn() {
+module.exports.spawn = async function spawn() {
   let ps = require('child_process').spawn(...arguments);
 
-  return new Promise((resolve, reject) => {
+  await new Promise((resolve, reject) => {
     ps.on('error', reject);
     ps.on('exit', resolve);
   });

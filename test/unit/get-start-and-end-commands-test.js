@@ -4,7 +4,6 @@ const { describe, it } = require('../helpers/mocha');
 const { expect } = require('chai');
 const sinon = require('sinon');
 const path = require('path');
-const co = require('co');
 const _getStartAndEndCommands = require('../../src/get-start-and-end-commands');
 const utils = require('../../src/utils');
 
@@ -81,7 +80,7 @@ describe(_getStartAndEndCommands, function() {
     });
   });
 
-  it('can create a project from cache', co.wrap(function*() {
+  it('can create a project from cache', async function() {
     let { createProjectFromCache } = getStartAndEndCommands();
 
     let createProject = createProjectFromCache({
@@ -92,7 +91,7 @@ describe(_getStartAndEndCommands, function() {
       }
     });
 
-    expect(yield createProject(cwd)).to.equal(projectPath);
+    expect(await createProject(cwd)).to.equal(projectPath);
 
     expect(spawnStub.args).to.deep.equal([[
       'node',
@@ -106,9 +105,9 @@ describe(_getStartAndEndCommands, function() {
         cwd
       }
     ]]);
-  }));
+  });
 
-  it('can create a project from remote', co.wrap(function*() {
+  it('can create a project from remote', async function() {
     let { createProjectFromRemote } = getStartAndEndCommands();
 
     let createProject = createProjectFromRemote({
@@ -119,7 +118,7 @@ describe(_getStartAndEndCommands, function() {
       }
     });
 
-    expect(yield createProject(cwd)).to.equal(projectPath);
+    expect(await createProject(cwd)).to.equal(projectPath);
 
     expect(npxSyncStub.args).to.deep.equal([[
       `${packageName}@${packageVersion} ${projectName} --scripts-version ${reactScriptsStartVersion}`,
@@ -127,9 +126,9 @@ describe(_getStartAndEndCommands, function() {
         cwd
       }
     ]]);
-  }));
+  });
 
-  it('can create an ejected project', co.wrap(function*() {
+  it('can create an ejected project', async function() {
     let projectType = 'ejected';
 
     let options = getStartAndEndCommands({
@@ -147,7 +146,7 @@ describe(_getStartAndEndCommands, function() {
       }
     });
 
-    expect(yield createProject(cwd)).to.equal(projectPath);
+    expect(await createProject(cwd)).to.equal(projectPath);
 
     expect(ejectStub.args).to.deep.equal([[
       {
@@ -155,5 +154,5 @@ describe(_getStartAndEndCommands, function() {
         reactScriptsVersion
       }
     ]]);
-  }));
+  });
 });
