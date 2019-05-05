@@ -3,7 +3,7 @@
 const semver = require('semver');
 const { spawn } = require('child_process');
 
-function eject({
+async function eject({
   reactScriptsVersion,
   cwd
 }) {
@@ -19,7 +19,7 @@ function eject({
     ps.stdin.end();
   }
 
-  return new Promise(resolve => {
+  await new Promise(resolve => {
     ps.on('exit', resolve);
   });
 }

@@ -44,19 +44,19 @@ function createProjectFromCache({
   packageRoot,
   options
 }) {
-  return function createProject(cwd) {
-    return utils.spawn('node', [
+  return async function createProject(cwd) {
+    await utils.spawn('node', [
       path.join(packageRoot, 'index.js'),
       options.projectName,
       '--scripts-version',
       options.reactScriptsVersion
     ], {
       cwd
-    }).then(() => {
-      return postCreateProject({
-        cwd,
-        options
-      });
+    });
+
+    return await postCreateProject({
+      cwd,
+      options
     });
   };
 }
@@ -64,18 +64,18 @@ function createProjectFromCache({
 function createProjectFromRemote({
   options
 }) {
-  return function createProject(cwd) {
+  return async function createProject(cwd) {
     // create-react-app doesn't work well with async npx
     utils.npxSync(`create-react-app@${options.packageVersion} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
 
-    return postCreateProject({
+    return await postCreateProject({
       cwd,
       options
     });
   };
 }
 
-function postCreateProject({
+async function postCreateProject({
   cwd,
   options: {
     projectName,
@@ -85,18 +85,14 @@ function postCreateProject({
 }) {
   let appPath = path.join(cwd, projectName);
 
-  return Promise.resolve().then(() => {
-    if (projectType !== 'ejected') {
-      return;
-    }
-
-    return utils.eject({
+  if (projectType === 'ejected') {
+    await utils.eject({
       cwd: appPath,
       reactScriptsVersion
     });
-  }).then(() => {
-    return appPath;
-  });
+  }
+
+  return appPath;
 }
 
 function mutatePackageJson({
@@ -104,7 +100,7 @@ function mutatePackageJson({
   reactScriptsVersion,
   time
 }) {
-  return function mutatePackageJson(pkg) {
+  return async function mutatePackageJson(pkg) {
     if (projectType === 'normal') {
       let newVersion = `^${reactScriptsVersion}`;
       let packageName = 'react-scripts';
@@ -116,11 +112,10 @@ function mutatePackageJson({
         pkg.devDependencies[packageName] = newVersion;
       }
     }
-    return pMap(['react', 'react-dom'], packageName => {
-      return getTimes(packageName).then(times => {
-        let version = getVersionAsOf(times, time);
-        pkg.dependencies[packageName] = `^${version}`;
-      });
+    await pMap(['react', 'react-dom'], async packageName => {
+      let times = await getTimes(packageName);
+      let version = getVersionAsOf(times, time);
+      pkg.dependencies[packageName] = `^${version}`;
     });
   };
 }
