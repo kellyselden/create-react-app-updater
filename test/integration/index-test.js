@@ -12,6 +12,7 @@ const {
 } = require('git-fixtures');
 const createReactAppUpdater = require('../../src');
 const {
+  assertNormalUpdate,
   assertNoUnstaged,
   assertNoStaged
 } = require('../helpers/assertions');
@@ -157,23 +158,6 @@ applicable codemods: create-element-to-jsx`);
     });
   });
 
-  it('can update a normal app', function() {
-    this.timeout(5 * 60 * 1000);
-
-    return merge({
-      fixturesPath: 'test/fixtures/normal/local',
-      commitMessage: 'my-app'
-    }).then(({
-      status
-    }) => {
-      fixtureCompare({
-        mergeFixtures: 'test/fixtures/normal/merge/my-app'
-      });
-
-      assertNoUnstaged(status);
-    });
-  });
-
   it('can update an ejected app', function() {
     this.timeout(5 * 60 * 1000);
 
@@ -187,6 +171,7 @@ applicable codemods: create-element-to-jsx`);
         mergeFixtures: 'test/fixtures/ejected/merge/my-app'
       });
 
+      assertNormalUpdate(status);
       assertNoUnstaged(status);
     });
   });
