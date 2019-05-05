@@ -15,9 +15,6 @@ const {
   assertNoUnstaged,
   assertNoStaged
 } = require('../helpers/assertions');
-const semver = require('semver');
-
-const shouldRunUpdateTests = semver.major(process.version) >= 8;
 
 describe(function() {
   this.timeout(30 * 1000);
@@ -91,7 +88,7 @@ describe(function() {
     });
   }
 
-  (shouldRunUpdateTests ? it : it.skip)('resets app', function() {
+  it('resets app', function() {
     this.timeout(5 * 60 * 1000);
 
     return merge({
@@ -160,7 +157,7 @@ applicable codemods: create-element-to-jsx`);
     });
   });
 
-  (shouldRunUpdateTests ? it : it.skip)('can update a normal app', function() {
+  it('can update a normal app', function() {
     this.timeout(5 * 60 * 1000);
 
     return merge({
@@ -177,7 +174,7 @@ applicable codemods: create-element-to-jsx`);
     });
   });
 
-  (shouldRunUpdateTests ? it : it.skip)('can update an ejected app', function() {
+  it('can update an ejected app', function() {
     this.timeout(5 * 60 * 1000);
 
     return merge({
