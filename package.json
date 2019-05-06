@@ -1,7 +1,7 @@
 {
   "name": "create-react-app-updater",
   "version": "0.7.3",
-  "description": "",
+  "description": "Update Create React App projects",
   "main": "src/index.js",
   "bin": {
     "create-react-app-updater": "bin/index.js",
@@ -22,7 +22,7 @@
   },
   "homepage": "https://gitlab.com/kellyselden/create-react-app-updater#readme",
   "engines": {
-    "node": ">= 8"
+    "node": ">=8"
   },
   "dependencies": {
     "boilerplate-update": "^0.20.0",
