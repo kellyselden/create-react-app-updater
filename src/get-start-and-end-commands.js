@@ -17,8 +17,8 @@ module.exports = function getStartAndEndCommands({
   endTime
 }) {
   // test
-  // require('./run')(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
-  // require('./run')(`npm i -g ${packageName}@2.1.1`);
+  // require('./run-sync')(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
+  // require('./run-sync')(`npm i -g ${packageName}@2.1.1`);
 
   return {
     projectName,
