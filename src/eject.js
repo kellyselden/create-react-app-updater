@@ -19,7 +19,8 @@ async function eject({
     ps.stdin.end();
   }
 
-  await new Promise(resolve => {
+  await new Promise((resolve, reject) => {
+    ps.on('error', reject);
     ps.on('exit', resolve);
   });
 }
