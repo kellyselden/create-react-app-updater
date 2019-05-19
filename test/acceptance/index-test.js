@@ -39,7 +39,7 @@ describe(function() {
       ];
     }
 
-    return await processBin({
+    return processBin({
       binFile: 'index',
       args,
       cwd: tmpPath,
