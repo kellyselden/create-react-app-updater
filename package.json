@@ -25,7 +25,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "boilerplate-update": "^0.21.0",
+    "boilerplate-update": "^0.22.0",
     "debug": "^4.1.1",
     "npx": "^10.2.0",
     "p-map": "^2.0.0",
