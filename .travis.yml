@@ -20,9 +20,8 @@ before_install:
 - rm /usr/local/bin/npx || true
 # test that we can't find it
 - "! which npx"
-script:
+before_script:
 - npm run lint
-- npm test
 deploy:
   provider: npm
   email: kellyselden@gmail.com
