@@ -2,7 +2,7 @@
   "name": "create-react-app-updater",
   "version": "0.7.8",
   "description": "Update Create React App projects",
-  "main": "src/index.js",
+  "main": "src",
   "bin": {
     "create-react-app-updater": "bin/index.js",
     "cra-update": "bin/index.js"
