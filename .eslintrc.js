@@ -3,16 +3,11 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018
   },
-  plugins: [
-    'node'
-  ],
   extends: [
-    'sane',
-    'plugin:node/recommended'
+    'sane-node'
   ],
   env: {
-    es6: true,
-    node: true
+    es6: true
   },
   rules: {
   },
@@ -28,11 +23,14 @@ module.exports = {
       plugins: [
         'mocha'
       ],
+      extends: [
+        'plugin:mocha/recommended'
+      ],
       env: {
         mocha: true
       },
       rules: {
-        'mocha/no-exclusive-tests': 'error'
+        'mocha/no-setup-in-describe': 'off'
       }
     }
   ]

@@ -8,7 +8,7 @@
     "cra-update": "bin/index.js"
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint . --ext js,json",
     "test": "cross-env DEBUG=create-react-app-updater,boilerplate-update,git-diff-apply,git-fixtures mocha \"test/!(fixtures)/**/*-test.js\""
   },
   "repository": {
@@ -25,7 +25,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "boilerplate-update": "^0.22.0",
+    "boilerplate-update": "0.22.3",
     "debug": "^4.1.1",
     "npx": "^10.2.0",
     "p-map": "^3.0.0",
@@ -39,11 +39,13 @@
     "chai": "^4.1.0",
     "cross-env": "^5.0.1",
     "eslint": "^6.0.0",
-    "eslint-config-sane": "^0.8.0",
+    "eslint-config-sane": "0.8.5",
+    "eslint-config-sane-node": "0.2.2",
+    "eslint-plugin-json-files": "0.6.2",
     "eslint-plugin-mocha": "^6.0.0",
     "eslint-plugin-node": "^9.0.0",
     "eslint-plugin-prefer-let": "^1.0.1",
-    "git-fixtures": "^0.18.1",
+    "git-fixtures": "0.18.2",
     "mocha": "^6.0.0",
     "mocha-helpers": "^3.0.0",
     "renovate-config-standard": "^2.0.0",
