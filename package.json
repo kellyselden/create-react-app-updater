@@ -29,7 +29,7 @@
     "src"
   ],
   "dependencies": {
-    "boilerplate-update": "0.22.6",
+    "boilerplate-update": "0.23.0",
     "debug": "^4.1.1",
     "npx": "^10.2.0",
     "p-map": "^3.0.0",
