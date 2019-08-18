@@ -30,7 +30,7 @@ module.exports = async function createReactAppUpdater({
     statsOnly,
     listCodemods,
     runCodemods,
-    codemodsUrl: 'https://raw.githubusercontent.com/kellyselden/create-react-app-updater-codemods-manifest/v2/manifest.json',
+    codemodsUrl: 'https://raw.githubusercontent.com/kellyselden/create-react-app-updater-codemods-manifest/cwd/manifest.json',
     createCustomDiff: true,
     mergeOptions: async function mergeOptions({
       packageJson,
