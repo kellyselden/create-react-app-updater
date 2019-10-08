@@ -1,6 +1,6 @@
 {
   "name": "create-react-app-updater",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Update Create React App projects",
   "main": "src",
   "bin": {
