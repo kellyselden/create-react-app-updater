@@ -46,24 +46,26 @@ module.exports = async function createReactAppUpdater({
 
       let createReactAppVersions = Object.keys(createReactAppTimes);
       let getTagVersion = _getTagVersion(createReactAppVersions);
+      let margin = 24 * 60 * 60 * 1000;
 
       let startVersion;
       let reactScriptsStartVersion;
       let startTime;
-      let margin = 24 * 60 * 60 * 1000;
-      if (from) {
-        startVersion = await getTagVersion(from);
-        startTime = createReactAppTimes[startVersion];
-        reactScriptsStartVersion = getVersionAsOfMargin(reactScriptsTimes, startTime, margin);
-      } else {
-        let {
-          'create-react-app': createReactAppVersion,
-          'react-scripts': reactScriptsVersion
-        } = await getPackageVersions(packageJson, projectType);
+      if (!reset) {
+        if (from) {
+          startVersion = await getTagVersion(from);
+          startTime = createReactAppTimes[startVersion];
+          reactScriptsStartVersion = getVersionAsOfMargin(reactScriptsTimes, startTime, margin);
+        } else {
+          let {
+            'create-react-app': createReactAppVersion,
+            'react-scripts': reactScriptsVersion
+          } = await getPackageVersions(packageJson, projectType);
 
-        startVersion = createReactAppVersion;
-        startTime = reactScriptsTimes[reactScriptsVersion];
-        reactScriptsStartVersion = reactScriptsVersion;
+          startVersion = createReactAppVersion;
+          startTime = reactScriptsTimes[reactScriptsVersion];
+          reactScriptsStartVersion = reactScriptsVersion;
+        }
       }
 
       let endVersion = await getTagVersion(to);
