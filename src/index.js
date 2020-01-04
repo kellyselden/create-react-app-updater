@@ -20,8 +20,7 @@ module.exports = async function createReactAppUpdater({
   runCodemods,
   reset,
   statsOnly,
-  listCodemods,
-  wasRunAsExecutable
+  listCodemods
 }) {
   return await (await boilerplateUpdate({
     projectOptions: ({ packageJson }) => [getProjectType(packageJson)],
@@ -86,7 +85,6 @@ module.exports = async function createReactAppUpdater({
           endTime
         })
       };
-    },
-    wasRunAsExecutable
+    }
   })).promise;
 };

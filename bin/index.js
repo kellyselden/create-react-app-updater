@@ -39,8 +39,7 @@ updateNotifier({
       runCodemods,
       reset,
       statsOnly,
-      listCodemods,
-      wasRunAsExecutable: true
+      listCodemods
     });
 
     if (message) {
