@@ -7,14 +7,6 @@ const args = require('../src/args');
 const { argv } = require('yargs')
   .options(args);
 
-const from = argv['from'];
-const to = argv['to'];
-const resolveConflicts = argv['resolve-conflicts'];
-const runCodemods = argv['run-codemods'];
-const reset = argv['reset'];
-const statsOnly = argv['stats-only'];
-const listCodemods = argv['list-codemods'];
-
 // Displays a message on the terminal if a new version of the package is available.
 const updateNotifier = require('update-notifier');
 const pkg = require('../package.json');
@@ -32,15 +24,7 @@ updateNotifier({
 
 (async() => {
   try {
-    let message = await createReactAppUpdater({
-      from,
-      to,
-      resolveConflicts,
-      runCodemods,
-      reset,
-      statsOnly,
-      listCodemods
-    });
+    let message = await createReactAppUpdater(argv);
 
     if (message) {
       console.log(message);
