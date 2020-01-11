@@ -24,9 +24,8 @@ before_script:
 - npm run lint
 deploy:
   provider: npm
-  email: kellyselden@gmail.com
-  api_key:
-    secure: QyZk869xZ7pagxhkqZkTE3Ql3ENCiUfUoTwqwIUnfrLBooNzDmSd6+sYU21uIj7p5cH8u8eIkFiJWg4d12Cg+C2pxT1Gd5xSc5kNGHBZV7yznjpXwDsesp3aqY25iZey0XsujBFd2CXz9iF84tQyav47OVhat4w9iviWGH2BHWk6x+iFb3ojHUfkiocyI91cKmdr/e1ERms73eJO40NggC9R7Kgnk2ntBEvktcfjFjzYGqN3BBiYYz4/qt/Jh2/Lv3XTO0VnZ09m+fTu9i9xxok0cUXeYk12Xx91gpvaMqZrKJDcH9ytSa1ZkbNdRiuWWdRVUBx0JCPuE0Jy+MuZECe51OMN/U8lL3PuLvNXtBosWIOtSIN6MsIoCo08DC7kIcFg71abE0YAW4yrG0R3/HlBBez4MF533CEEvfBpJXWDhEzAIWhb82wgpjfYFdmq5WyLfyZkSMUmhRwRw8xUQs8Hhfr5ZsoLs1Px1WQAHJIvJHBSFz+cLXyLRtXONwEFeL1VfRS40A3jou3XdL+DJ2qN2RYwkhavRFvAkf3mOMi7SDaczeVVLKHArjHO2ze3rg6G8r5TcvP8xibEyPB7QYmzzi1k5CYYbU65vCQxwCsLTb428iSHI4y/TsVhYjo+w977Rq4OX8J55opkyRQ2Zop8MWE9/9S3s0TluDecZJw=
+  email: $NPM_EMAIL
+  api_key: $NPM_TOKEN
   on:
     tags: true
     repo: kellyselden/create-react-app-updater
