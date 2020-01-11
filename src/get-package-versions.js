@@ -4,7 +4,7 @@ const pMap = require('p-map');
 const pRetry = require('p-retry');
 const semver = require('semver');
 const npm = require('boilerplate-update/src/npm');
-const getVersions = require('boilerplate-update/src/get-versions');
+const getVersions = require('./get-versions');
 const getTimes = require('boilerplate-update/src/get-times');
 const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
