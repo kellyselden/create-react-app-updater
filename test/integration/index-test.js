@@ -139,6 +139,7 @@ to version: 2.0.4`);
     expect(result).to.equal(`project options: normal
 from version: 1.0.0
 to version: 2.1.1
+codemods source: https://github.com/kellyselden/create-react-app-updater-codemods-manifest.git#semver:1
 applicable codemods: create-element-to-jsx`);
   });
 
