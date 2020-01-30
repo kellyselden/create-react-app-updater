@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext js,json",
-    "test": "cross-env DEBUG=create-react-app-updater,boilerplate-update,git-diff-apply,git-fixtures mocha \"test/!(fixtures)/**/*-test.js\" --retries 1"
+    "test": "cross-env DEBUG=create-react-app-updater,boilerplate-update,git-diff-apply,git-fixtures mocha \"test/!(fixtures)/**/*-test.js\" --retries 2"
   },
   "repository": {
     "type": "git",
