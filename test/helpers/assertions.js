@@ -1,6 +1,6 @@
 'use strict';
 
-const { expect } = require('chai');
+const { expect } = require('../helpers/chai');
 
 module.exports.assertNormalUpdate = function(status) {
   expect(status).to.match(/^M {2}src\/App\.js$/m);
