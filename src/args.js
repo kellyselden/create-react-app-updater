@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   'from': {
     type: 'string',

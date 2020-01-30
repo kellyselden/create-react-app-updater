@@ -1,7 +1,7 @@
 'use strict';
 
 const { describe, it } = require('../helpers/mocha');
-const { expect } = require('chai');
+const { expect } = require('../helpers/chai');
 const sinon = require('sinon');
 const path = require('path');
 const _getStartAndEndCommands = require('../../src/get-start-and-end-commands');

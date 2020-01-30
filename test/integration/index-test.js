@@ -1,7 +1,7 @@
 'use strict';
 
 const { describe, it } = require('../helpers/mocha');
-const { expect } = require('chai');
+const { expect } = require('../helpers/chai');
 const path = require('path');
 const sinon = require('sinon');
 const {
