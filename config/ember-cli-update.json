@@ -19,7 +19,8 @@
           "name": "@kellyselden/node-template",
           "options": [
             "--repo-slug=kellyselden/create-react-app-updater",
-            "--ci-provider=travis-ci"
+            "--travis-ci",
+            "--appveyor=y8ua3584brlpcrpb"
           ]
         }
       ]
