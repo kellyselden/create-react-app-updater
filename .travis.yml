@@ -7,6 +7,9 @@ branches:
   - master
   # npm version tags
   - /^v\d+\.\d+\.\d+$/
+env:
+  global:
+  - DEBUG=create-react-app-updater,boilerplate-update,git-diff-apply,git-fixtures
 cache:
   directories:
   - "$HOME/.npm"

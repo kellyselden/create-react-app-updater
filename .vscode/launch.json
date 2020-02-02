@@ -13,7 +13,7 @@
         "--timeout",
         "999999",
         "--colors",
-        "${workspaceRoot}/test/!(fixtures)/**/*-test.js"
+        "test/!(fixtures)/**/*-test.js"
       ],
       "env": {
         "DEBUG": "create-react-app-updater,boilerplate-update,git-diff-apply,git-fixtures"
