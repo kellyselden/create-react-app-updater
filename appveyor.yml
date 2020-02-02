@@ -30,7 +30,7 @@ test_script:
 
 # http://help.appveyor.com/discussions/questions/1310-delete-cache
 cache:
-  - node_modules -> package.json
+  - node_modules -> package-lock.json
 
 # Don't actually build.
 build: off
