@@ -3,7 +3,6 @@
 const { describe, it } = require('../helpers/mocha');
 const { expect } = require('../helpers/chai');
 const path = require('path');
-const sinon = require('sinon');
 const {
   buildTmp,
   processExit,
@@ -20,20 +19,13 @@ describe(function() {
   this.timeout(30 * 1000);
 
   let cwd;
-  let sandbox;
   let tmpPath;
 
   before(function() {
     cwd = process.cwd();
   });
 
-  beforeEach(function() {
-    sandbox = sinon.createSandbox();
-  });
-
   afterEach(function() {
-    sandbox.restore();
-
     process.chdir(cwd);
   });
 

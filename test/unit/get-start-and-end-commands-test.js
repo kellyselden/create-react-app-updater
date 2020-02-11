@@ -22,21 +22,18 @@ const packageName = 'create-react-app';
 const projectPath = path.normalize(`${cwd}/${projectName}`);
 
 describe(_getStartAndEndCommands, function() {
-  let sandbox;
   let npxSyncStub;
   let spawnStub;
   let ejectStub;
 
   beforeEach(function() {
-    sandbox = sinon.createSandbox();
-
-    npxSyncStub = sandbox.stub(utils, 'npxSync');
-    spawnStub = sandbox.stub(utils, 'spawn').resolves();
-    ejectStub = sandbox.stub(utils, 'eject').resolves();
+    npxSyncStub = sinon.stub(utils, 'npxSync');
+    spawnStub = sinon.stub(utils, 'spawn').resolves();
+    ejectStub = sinon.stub(utils, 'eject').resolves();
   });
 
   afterEach(function() {
-    sandbox.restore();
+    sinon.restore();
   });
 
   function getStartAndEndCommands(options) {
