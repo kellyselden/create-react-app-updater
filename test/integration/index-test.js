@@ -81,7 +81,7 @@ describe(function() {
   }
 
   it('resets app', async function() {
-    this.timeout(5 * 60 * 1000);
+    this.timeout(60 * 1000);
 
     let {
       status
@@ -151,7 +151,7 @@ applicable codemods: create-element-to-jsx`);
   });
 
   it('can update an ejected app', async function() {
-    this.timeout(5 * 60 * 1000);
+    this.timeout(3 * 60 * 1000);
 
     let {
       status

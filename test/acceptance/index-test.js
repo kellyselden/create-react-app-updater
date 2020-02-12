@@ -14,7 +14,7 @@ const {
 } = require('../helpers/assertions');
 
 describe(function() {
-  this.timeout(30 * 1000);
+  this.timeout(3 * 60 * 1000);
 
   let tmpPath;
 
@@ -62,8 +62,6 @@ describe(function() {
   }
 
   it('works', async function() {
-    this.timeout(5 * 60 * 1000);
-
     let {
       status
     } = await (await merge({
@@ -80,8 +78,6 @@ describe(function() {
   });
 
   it('runs codemods', async function() {
-    this.timeout(5 * 60 * 1000);
-
     let {
       ps,
       promise
