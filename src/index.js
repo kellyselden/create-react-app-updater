@@ -14,6 +14,7 @@ function getVersionAsOfMargin(times, time, margin = 0) {
 }
 
 module.exports = async function createReactAppUpdater({
+  cwd = process.cwd(),
   from,
   to,
   resolveConflicts,
@@ -23,6 +24,7 @@ module.exports = async function createReactAppUpdater({
   listCodemods
 }) {
   return await (await boilerplateUpdate({
+    cwd,
     projectOptions: ({ packageJson }) => [getProjectType(packageJson)],
     resolveConflicts,
     reset,
