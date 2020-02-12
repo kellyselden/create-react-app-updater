@@ -2,7 +2,6 @@
 
 const { describe, it } = require('../helpers/mocha');
 const { expect } = require('../helpers/chai');
-const path = require('path');
 const {
   buildTmp,
   processExit,
@@ -18,16 +17,7 @@ const {
 describe(function() {
   this.timeout(30 * 1000);
 
-  let cwd;
   let tmpPath;
-
-  before(function() {
-    cwd = process.cwd();
-  });
-
-  afterEach(function() {
-    process.chdir(cwd);
-  });
 
   async function merge({
     fixturesPath,
@@ -47,9 +37,8 @@ describe(function() {
       dirty
     });
 
-    process.chdir(tmpPath);
-
     let promise = createReactAppUpdater({
+      cwd: tmpPath,
       from,
       to,
       reset,
@@ -71,7 +60,7 @@ describe(function() {
     mergeFixtures
   }) {
     let actual = tmpPath;
-    let expected = path.join(cwd, mergeFixtures);
+    let expected = mergeFixtures;
 
     _fixtureCompare({
       expect,
