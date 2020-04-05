@@ -20,7 +20,8 @@
           "options": [
             "--repo-slug=kellyselden/create-react-app-updater",
             "--travis-ci",
-            "--appveyor=y8ua3584brlpcrpb"
+            "--appveyor=y8ua3584brlpcrpb",
+            "--renovate"
           ]
         }
       ]
