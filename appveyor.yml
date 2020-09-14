@@ -4,7 +4,7 @@ environment:
     # node 14.5 has a regression
     # npm ERR! cb.apply is not a function
     # - nodejs_version: ""
-    - nodejs_version: "14.3"
+    - nodejs_version: "14.4"
   DEBUG: "create-react-app-updater,boilerplate-update,git-diff-apply,git-fixtures"
 
 branches:
@@ -22,7 +22,7 @@ install:
   - where npx
   # don't accidentally use the global npx
   - ps: >-
-      if ($env:nodejs_version -ne "14.3") {
+      if ($env:nodejs_version -ne "14.4") {
         rm "C:\Program Files (x86)\nodejs\npx*"
       } else {
         rm "C:\Program Files\nodejs\npx*"
