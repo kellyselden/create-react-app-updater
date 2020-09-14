@@ -21,7 +21,12 @@ install:
   - npm config set spin false
   - where npx
   # don't accidentally use the global npx
-  - ps: rm "C:\Program Files (x86)\nodejs\npx*"
+  - ps: >-
+      if ($env:nodejs_version -ne "14.3") {
+        rm "C:\Program Files (x86)\nodejs\npx*"
+      } else {
+        rm "C:\Program Files\nodejs\npx*"
+      }
   - ps: rm C:\Users\appveyor\AppData\Roaming\npm\npx*
   # test that we can't find it
   - ps: if (gcm npx) { exit }
