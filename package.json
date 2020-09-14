@@ -35,7 +35,7 @@
     "p-map": "^3.0.0",
     "p-retry": "^4.0.0",
     "resolve": "^1.10.0",
-    "semver": "^6.0.0",
+    "semver": "^7.0.0",
     "update-notifier": "^4.0.0",
     "yargs": "^15.0.0"
   },
