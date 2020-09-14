@@ -37,7 +37,7 @@
     "resolve": "^1.10.0",
     "semver": "^6.0.0",
     "update-notifier": "^4.0.0",
-    "yargs": "^15.0.0"
+    "yargs": "^16.0.0"
   },
   "devDependencies": {
     "@kellyselden/node-template": "1.1.0",
