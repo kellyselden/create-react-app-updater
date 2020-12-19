@@ -19,7 +19,7 @@
           "name": "@kellyselden/node-template",
           "options": [
             "--repo-slug=kellyselden/create-react-app-updater",
-            "--travis-ci",
+            "--github-actions",
             "--appveyor=y8ua3584brlpcrpb",
             "--renovate"
           ]
