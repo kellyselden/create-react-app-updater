@@ -42,7 +42,7 @@ jobs:
     - run: npm ci
     - run: npm test
       env:
-        DEBUG: create-react-app-updater,boilerplate-update,git-diff-apply,git-fixtures
+        DEBUG: create-react-app-updater,boilerplate-update,git-diff-apply
 
   ember-cli-update:
     needs: test

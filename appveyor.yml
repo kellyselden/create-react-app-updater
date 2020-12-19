@@ -5,7 +5,7 @@ environment:
     # npm ERR! cb.apply is not a function
     # - nodejs_version: ""
     - nodejs_version: "14.4"
-  DEBUG: "create-react-app-updater,boilerplate-update,git-diff-apply,git-fixtures"
+  DEBUG: "create-react-app-updater,boilerplate-update,git-diff-apply"
 
 branches:
   only:
