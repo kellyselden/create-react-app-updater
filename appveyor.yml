@@ -2,7 +2,7 @@ environment:
   matrix:
     # node 12.18 has a regression
     # npm ERR! cb.apply is not a function
-    # - nodejs_version: ""
+    # - nodejs_version: "12"
     - nodejs_version: "12.17"
     # node 14.5 has a regression
     # npm ERR! cb.apply is not a function

@@ -27,7 +27,7 @@ jobs:
         node:
         # node 12.18 has a regression
         # npm ERR! cb.apply is not a function
-        # - node
+        # - 12
         - 12.17
         # node 14.5 has a regression
         # npm ERR! cb.apply is not a function
