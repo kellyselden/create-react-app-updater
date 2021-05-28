@@ -25,15 +25,11 @@ jobs:
         os:
         - ubuntu-latest
         node:
-<<<<<<< HEAD
-        - 10
+        - 12
         # node 14.5 has a regression
         # npm ERR! cb.apply is not a function
         # - node
         - 14.4
-=======
-        - 12
->>>>>>> 0effaca (v1.4.5...v2.0.0)
 
     runs-on: ${{ matrix.os }}
 
