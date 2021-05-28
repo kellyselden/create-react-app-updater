@@ -1,11 +1,15 @@
 environment:
   matrix:
+<<<<<<< HEAD
     - nodejs_version: "10"
     # node 14.5 has a regression
     # npm ERR! cb.apply is not a function
     # - nodejs_version: ""
     - nodejs_version: "14.4"
   DEBUG: "create-react-app-updater,boilerplate-update,git-diff-apply"
+=======
+    - nodejs_version: "12"
+>>>>>>> 0effaca (v1.4.5...v2.0.0)
 
 branches:
   only:
