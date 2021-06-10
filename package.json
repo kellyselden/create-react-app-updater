@@ -40,7 +40,7 @@
     "yargs": "^16.0.0"
   },
   "devDependencies": {
-    "@kellyselden/node-template": "2.0.0",
+    "@kellyselden/node-template": "2.0.2",
     "chai": "^4.3.4",
     "eslint": "^7.26.0",
     "eslint-config-sane": "^1.0.0",
