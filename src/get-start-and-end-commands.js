@@ -2,7 +2,6 @@
 
 const path = require('path');
 const utils = require('./utils');
-const pMap = require('p-map');
 const getTimes = require('boilerplate-update/src/get-times');
 const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
@@ -112,6 +111,10 @@ function mutatePackageJson({
         pkg.devDependencies[packageName] = newVersion;
       }
     }
+
+    // eslint-disable-next-line prefer-let/prefer-let
+    const { default: pMap } = await import('p-map');
+
     await pMap(['react', 'react-dom'], async packageName => {
       let times = await getTimes(packageName);
       let version = getVersionAsOf(times, time);

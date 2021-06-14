@@ -1,6 +1,5 @@
 'use strict';
 
-const pMap = require('p-map');
 const pRetry = require('p-retry');
 const semver = require('semver');
 const npm = require('boilerplate-update/src/npm');
@@ -22,6 +21,9 @@ async function crawl({
   let sortedParentVersions = parentVersions.sort((a, b) => {
     return semver.lt(a, b) ? 1 : -1;
   });
+
+  // eslint-disable-next-line prefer-let/prefer-let
+  const { default: pMap } = await import('p-map');
 
   await pMap(sortedParentVersions, async _parentVersion => {
     if (parentVersion) {
