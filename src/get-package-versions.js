@@ -34,7 +34,7 @@ async function crawl({
       let results;
 
       try {
-        results = await npm(`view ${parentPackageName}@${_parentVersion} dependencies --json`);
+        results = await npm('view', `${parentPackageName}@${_parentVersion}`, 'dependencies', '--json');
       } catch (err) {
         // occurs sometimes when running multiple npm calls at once
         if (typeof err !== 'string' || !err.includes('npm update check failed')) {
