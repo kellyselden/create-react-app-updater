@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "eslint . --ext js,json",
-    "test": "mocha \"test/!(fixtures)/**/*-test.js\" --retries 2"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
