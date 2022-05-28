@@ -14,7 +14,7 @@ const {
 } = require('../helpers/assertions');
 
 describe(function() {
-  this.timeout(3 * 60 * 1000);
+  this.timeout(3 * 60e3);
 
   let tmpPath;
 

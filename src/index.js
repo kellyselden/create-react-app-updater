@@ -47,7 +47,7 @@ module.exports = async function createReactAppUpdater({
 
       let createReactAppVersions = Object.keys(createReactAppTimes);
       let getTagVersion = _getTagVersion(createReactAppVersions);
-      let margin = 24 * 60 * 60 * 1000;
+      let margin = 24 * 60 * 60e3;
 
       let startVersion;
       let reactScriptsStartVersion;
