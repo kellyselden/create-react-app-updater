@@ -1,6 +1,5 @@
 'use strict';
 
-const pRetry = require('p-retry');
 const semver = require('semver');
 const pacote = require('pacote');
 const getVersions = require('./get-versions');
@@ -30,42 +29,27 @@ async function crawl({
       return;
     }
 
-    await pRetry(async() => {
-      let dependencies;
+    let { dependencies } = await pacote.manifest(`${parentPackageName}@${_parentVersion}`);
 
-      try {
-        dependencies = (await pacote.manifest(`${parentPackageName}@${_parentVersion}`)).dependencies;
-      } catch (err) {
-        // occurs sometimes when running multiple npm calls at once
-        if (typeof err !== 'string' || !err.includes('npm update check failed')) {
-          throw new pRetry.AbortError(err);
-        }
+    if (parentVersion) {
+      return;
+    }
 
-        // https://github.com/sindresorhus/p-retry/issues/14
-        // throw err;
-        throw new Error(err);
-      }
+    // some versions may be missing deps
+    if (!dependencies) {
+      return;
+    }
 
-      if (parentVersion) {
-        return;
-      }
+    let _childVersion = dependencies[childPackageName];
 
-      // some versions may be missing deps
-      if (!dependencies) {
-        return;
-      }
-
-      let _childVersion = dependencies[childPackageName];
-
-      if (_childVersion === childVersion) {
+    if (_childVersion === childVersion) {
+      parentVersion = _parentVersion;
+    } else if (!semver.prerelease(_childVersion)) {
+      let _minChildVersion = semver.minSatisfying(childVersions, _childVersion);
+      if (semver.lte(_minChildVersion, minChildVersion)) {
         parentVersion = _parentVersion;
-      } else if (!semver.prerelease(_childVersion)) {
-        let _minChildVersion = semver.minSatisfying(childVersions, _childVersion);
-        if (semver.lte(_minChildVersion, minChildVersion)) {
-          parentVersion = _parentVersion;
-        }
       }
-    }, { retries: 5 });
+    }
   }, { concurrency: 5 });
 
   return parentVersion;
