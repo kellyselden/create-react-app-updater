@@ -2,7 +2,7 @@
 
 const pRetry = require('p-retry');
 const semver = require('semver');
-const npm = require('boilerplate-update/src/npm');
+const pacote = require('pacote');
 const getVersions = require('./get-versions');
 const getTimes = require('boilerplate-update/src/get-times');
 const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
@@ -31,10 +31,10 @@ async function crawl({
     }
 
     await pRetry(async() => {
-      let results;
+      let dependencies;
 
       try {
-        results = await npm('view', `${parentPackageName}@${_parentVersion}`, 'dependencies', '--json');
+        dependencies = (await pacote.manifest(`${parentPackageName}@${_parentVersion}`)).dependencies;
       } catch (err) {
         // occurs sometimes when running multiple npm calls at once
         if (typeof err !== 'string' || !err.includes('npm update check failed')) {
@@ -51,11 +51,10 @@ async function crawl({
       }
 
       // some versions may be missing deps
-      if (!results) {
+      if (!dependencies) {
         return;
       }
 
-      let dependencies = JSON.parse(results);
       let _childVersion = dependencies[childPackageName];
 
       if (_childVersion === childVersion) {
