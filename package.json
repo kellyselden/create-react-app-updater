@@ -34,6 +34,7 @@
     "npx": "^10.2.0",
     "p-map": "^5.0.0",
     "p-retry": "^4.0.0",
+    "pacote": "^13.5.0",
     "resolve": "^1.10.0",
     "semver": "^7.0.0",
     "update-notifier": "^5.0.0",
