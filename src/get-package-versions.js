@@ -29,11 +29,23 @@ async function crawl({
       return;
     }
 
-    let { dependencies } = await pacote.manifest(`${parentPackageName}@${_parentVersion}`);
+    let manifest;
+
+    try {
+      manifest = await pacote.manifest(`${parentPackageName}@${_parentVersion}`);
+    } catch (err) {
+      if (err.code === 'ETARGET') {
+        return;
+      } else {
+        throw err;
+      }
+    }
 
     if (parentVersion) {
       return;
     }
+
+    let { dependencies } = manifest;
 
     // some versions may be missing deps
     if (!dependencies) {
