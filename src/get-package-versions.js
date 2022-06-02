@@ -2,7 +2,7 @@
 
 const semver = require('semver');
 const pacote = require('pacote');
-const getVersions = require('./get-versions');
+const getVersions = require('boilerplate-update/src/get-versions');
 const getTimes = require('boilerplate-update/src/get-times');
 const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
