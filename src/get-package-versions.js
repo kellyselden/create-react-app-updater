@@ -45,14 +45,7 @@ async function crawl({
       return;
     }
 
-    let { dependencies } = manifest;
-
-    // some versions may be missing deps
-    if (!dependencies) {
-      return;
-    }
-
-    let _childVersion = dependencies[childPackageName];
+    let _childVersion = manifest.dependencies[childPackageName];
 
     if (_childVersion === childVersion) {
       parentVersion = _parentVersion;
