@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
       with:
-        node-version: 12
+        node-version: 14
 
     - run: npm ci
     - run: npm run lint
@@ -29,14 +29,13 @@ jobs:
         os:
         - ubuntu-latest
         node:
-        # node 12.18 has a regression
+        # node 14.5 has a regression
         # npm ERR! cb.apply is not a function
-        # - 12
-        - 12.17
+        # - 14
+        - 14.4
         # node 14.5 has a regression
         # npm ERR! cb.apply is not a function
         # - node
-        - 14.4
 
     runs-on: ${{ matrix.os }}
 
@@ -64,7 +63,7 @@ jobs:
         token: ${{ secrets.GitHubToken }}
     - uses: actions/setup-node@v3
       with:
-        node-version: 12
+        node-version: 14
 
     - uses: kellyselden/ember-cli-update-action@v3
       with:
