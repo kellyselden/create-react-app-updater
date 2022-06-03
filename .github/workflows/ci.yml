@@ -29,13 +29,8 @@ jobs:
         os:
         - ubuntu-latest
         node:
-        # node 14.5 has a regression
-        # npm ERR! cb.apply is not a function
-        # - 14
-        - 14.4
-        # node 14.5 has a regression
-        # npm ERR! cb.apply is not a function
-        # - node
+        - 14
+        - node
 
     runs-on: ${{ matrix.os }}
 
