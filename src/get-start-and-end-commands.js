@@ -17,8 +17,8 @@ module.exports = function getStartAndEndCommands({
   endTime
 }) {
   // test
-  // require('./run-sync')(`npm i ${packageName}@1.0.0 --no-save --no-package-lock`);
-  // require('./run-sync')(`npm i -g ${packageName}@2.1.1`);
+  // require('./run-sync')(['npm', 'i', `${packageName}@1.0.0`, '--no-save', '--no-package-lock']);
+  // require('./run-sync')(['npm', 'i', '-g', `${packageName}@2.1.1`]);
 
   return {
     projectName,
@@ -65,7 +65,7 @@ function createProjectFromRemote({
 }) {
   return async function createProject(cwd) {
     // create-react-app doesn't work well with async npx
-    utils.npxSync(`create-react-app@${options.packageVersion} ${options.projectName} --scripts-version ${options.reactScriptsVersion}`, { cwd });
+    utils.npxSync([`create-react-app@${options.packageVersion}`, options.projectName, '--scripts-version', options.reactScriptsVersion], { cwd });
 
     return await postCreateProject({
       cwd,

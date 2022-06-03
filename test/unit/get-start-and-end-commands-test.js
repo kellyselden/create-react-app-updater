@@ -118,7 +118,12 @@ describe(_getStartAndEndCommands, function() {
     expect(await createProject(cwd)).to.equal(projectPath);
 
     expect(npxSyncStub.args).to.deep.equal([[
-      `${packageName}@${packageVersion} ${projectName} --scripts-version ${reactScriptsStartVersion}`,
+      [
+        `${packageName}@${packageVersion}`,
+        projectName,
+        '--scripts-version',
+        reactScriptsStartVersion
+      ],
       {
         cwd
       }

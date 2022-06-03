@@ -3,9 +3,9 @@
 const execa = require('execa');
 const debug = require('./debug');
 
-module.exports = function runSync(command, options) {
-  debug(command);
-  let { stdout } = execa.commandSync(command, options);
+module.exports = function runSync() {
+  debug(...arguments);
+  let { stdout } = execa.sync(...arguments);
   debug(stdout);
   return stdout;
 };
