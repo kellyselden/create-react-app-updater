@@ -2,6 +2,7 @@
 
 const path = require('path');
 const utils = require('./utils');
+const execa = require('execa');
 const getTimes = require('boilerplate-update/src/get-times');
 const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
@@ -44,8 +45,7 @@ function createProjectFromCache({
   options
 }) {
   return async function createProject(cwd) {
-    await utils.spawn('node', [
-      path.join(packageRoot, 'index.js'),
+    await execa.node(path.join(packageRoot, 'index.js'), [
       options.projectName,
       '--scripts-version',
       options.reactScriptsVersion
