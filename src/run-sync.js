@@ -1,11 +1,11 @@
 'use strict';
 
-const cp = require('child_process');
+const execa = require('execa');
 const debug = require('./debug');
 
 module.exports = function runSync(command, options) {
   debug(command);
-  let result = cp.execSync(command, options).toString();
-  debug(result);
-  return result;
+  let { stdout } = execa.commandSync(command, options);
+  debug(stdout);
+  return stdout;
 };

@@ -31,6 +31,7 @@
   "dependencies": {
     "boilerplate-update": "^2.1.0",
     "debug": "^4.1.1",
+    "execa": "^5.1.1",
     "npx": "^10.2.0",
     "p-map": "^5.0.0",
     "pacote": "^13.5.0",
