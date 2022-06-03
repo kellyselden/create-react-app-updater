@@ -6,6 +6,7 @@ const sinon = require('sinon');
 const path = require('path');
 const _getStartAndEndCommands = require('../../src/get-start-and-end-commands');
 const utils = require('../../src/utils');
+const execa = require('execa');
 
 const projectName = 'my-custom-app';
 const createReactAppStartVersion = '0.0.1';
@@ -23,12 +24,12 @@ const projectPath = path.normalize(`${cwd}/${projectName}`);
 
 describe(_getStartAndEndCommands, function() {
   let npxSyncStub;
-  let spawnStub;
+  let execaNodeStub;
   let ejectStub;
 
   beforeEach(function() {
     npxSyncStub = sinon.stub(utils, 'npxSync');
-    spawnStub = sinon.stub(utils, 'spawn').resolves();
+    execaNodeStub = sinon.stub(execa, 'node').resolves();
     ejectStub = sinon.stub(utils, 'eject').resolves();
   });
 
@@ -90,10 +91,9 @@ describe(_getStartAndEndCommands, function() {
 
     expect(await createProject(cwd)).to.equal(projectPath);
 
-    expect(spawnStub.args).to.deep.equal([[
-      'node',
+    expect(execaNodeStub.args).to.deep.equal([[
+      path.normalize(`${packageRoot}/index.js`),
       [
-        path.normalize(`${packageRoot}/index.js`),
         projectName,
         '--scripts-version',
         reactScriptsStartVersion
