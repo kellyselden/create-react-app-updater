@@ -7,6 +7,7 @@ environment:
     # node 14.5 has a regression
     # npm ERR! cb.apply is not a function
     # - nodejs_version: ""
+
   DEBUG: "create-react-app-updater,boilerplate-update,git-diff-apply"
 
 branches:
