@@ -51,7 +51,7 @@
     "eslint-plugin-prefer-let": "^3.0.1",
     "git-fixtures": "^5.0.1",
     "mocha": "^10.2.0",
-    "mocha-helpers": "^7.1.0",
+    "mocha-helpers": "^8.0.0",
     "renovate-config-standard": "2.1.2",
     "sinon": "^15.2.0",
     "standard-node-template": "3.2.1"
