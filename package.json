@@ -40,18 +40,18 @@
     "yargs": "^17.0.0"
   },
   "devDependencies": {
-    "@kellyselden/node-template": "3.1.0",
+    "@kellyselden/node-template": "4.1.0",
     "chai": "^4.3.7",
     "eslint": "^8.44.0",
     "eslint-config-sane": "^1.0.2",
     "eslint-config-sane-node": "^1.1.1",
-    "eslint-plugin-json-files": "^2.2.0",
+    "eslint-plugin-json-files": "^3.0.0",
     "eslint-plugin-mocha": "^10.1.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prefer-let": "^3.0.1",
     "git-fixtures": "^5.0.1",
     "mocha": "^10.2.0",
-    "mocha-helpers": "^7.1.0",
+    "mocha-helpers": "^8.0.0",
     "renovate-config-standard": "2.1.2",
     "sinon": "^15.2.0",
     "standard-node-template": "3.2.1"

@@ -16,7 +16,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
       with:
-        node-version: 16
+        node-version: 18
 
     - run: npm ci
     - run: npm run lint
@@ -29,7 +29,7 @@ jobs:
         os:
         - ubuntu-latest
         node:
-        - 16
+        - 18
 
         - node
 
@@ -67,9 +67,9 @@ jobs:
         token: ${{ secrets.GitHubToken }}
     - uses: actions/setup-node@v4
       with:
-        node-version: 16
+        node-version: 18
 
-    - uses: kellyselden/ember-cli-update-action@v4
+    - uses: kellyselden/ember-cli-update-action@v5
       with:
         autofix_command: npm run lint -- --fix
         ignore_to: true
