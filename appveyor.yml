@@ -7,7 +7,7 @@ environment:
 
 branches:
   only:
-    - master
+    - main
 
 # Fix line endings in Windows. (runs before repo cloning)
 init:
