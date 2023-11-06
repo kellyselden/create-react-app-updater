@@ -29,7 +29,7 @@
     "src"
   ],
   "dependencies": {
-    "boilerplate-update": "^2.1.0",
+    "boilerplate-update": "^4.0.0",
     "debug": "^4.1.1",
     "execa": "^5.1.1",
     "npm": "^10.0.0",
