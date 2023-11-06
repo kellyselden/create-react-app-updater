@@ -16,7 +16,6 @@ init:
 # Install scripts. (runs after repo cloning)
 install:
   - ps: Install-Product node $env:nodejs_version
-  - npm config set spin false
   - where npx
   # don't accidentally use the global npx
   - ps: rm "C:\Program Files\nodejs\npx*"
