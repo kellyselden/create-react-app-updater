@@ -12,5 +12,11 @@ module.exports.npxSync = function npxSync(args, options) {
   //   ...options
   // });
 
-  return require('./run-sync')('node', [path.join(path.dirname(require.resolve('npm')), 'bin/npx-cli.js'), ...args], options);
+  return require('./run-sync').call(this, 'node', [path.join(path.dirname(require.resolve('npm')), 'bin/npx-cli.js'), ...args], options);
+};
+
+module.exports.execaNode = async function execaNode() {
+  let { execaNode } = await import('execa');
+
+  return execaNode(...arguments);
 };

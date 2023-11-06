@@ -1,11 +1,10 @@
 'use strict';
 
-const execa = require('execa');
 const debug = require('./debug');
 
 module.exports = function runSync() {
   debug(...arguments);
-  let { stdout } = execa.sync(...arguments);
+  let { stdout } = this.execaSync(...arguments);
   debug(stdout);
   return stdout;
 };
