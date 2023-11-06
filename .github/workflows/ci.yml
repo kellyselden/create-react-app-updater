@@ -40,6 +40,15 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
 
+    - run: npm config set spin false
+    - run: which npx
+    # don't accidentally use the global npx
+    - run: rm $(which npx)
+    # sometimes this exists
+    - run: rm /usr/local/bin/npx || true
+    # test that we can't find it
+    - run: "! which npx"
+
     - run: npm ci
     - run: npm test
       env:
