@@ -6,7 +6,6 @@ const sinon = require('sinon');
 const path = require('path');
 const _getStartAndEndCommands = require('../../src/get-start-and-end-commands');
 const utils = require('../../src/utils');
-const execa = require('execa');
 
 const projectName = 'my-custom-app';
 const createReactAppStartVersion = '0.0.1';
@@ -29,7 +28,7 @@ describe(_getStartAndEndCommands, function() {
 
   beforeEach(function() {
     npxSyncStub = sinon.stub(utils, 'npxSync');
-    execaNodeStub = sinon.stub(execa, 'node').resolves();
+    execaNodeStub = sinon.stub(utils, 'execaNode').resolves();
     ejectStub = sinon.stub(utils, 'eject').resolves();
   });
 

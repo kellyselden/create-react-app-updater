@@ -2,7 +2,6 @@
 
 const path = require('path');
 const utils = require('./utils');
-const execa = require('execa');
 const getTimes = require('boilerplate-update/src/get-times');
 const getVersionAsOf = require('boilerplate-update/src/get-version-as-of');
 
@@ -45,7 +44,7 @@ function createProjectFromCache({
   options
 }) {
   return async function createProject(cwd) {
-    await execa.node(path.join(packageRoot, 'index.js'), [
+    await utils.execaNode(path.join(packageRoot, 'index.js'), [
       options.projectName,
       '--scripts-version',
       options.reactScriptsVersion
@@ -64,8 +63,10 @@ function createProjectFromRemote({
   options
 }) {
   return async function createProject(cwd) {
+    let execa = await import('execa');
+
     // create-react-app doesn't work well with async npx
-    utils.npxSync([`create-react-app@${options.packageVersion}`, options.projectName, '--scripts-version', options.reactScriptsVersion], { cwd });
+    utils.npxSync.call(execa, [`create-react-app@${options.packageVersion}`, options.projectName, '--scripts-version', options.reactScriptsVersion], { cwd });
 
     return await postCreateProject({
       cwd,
