@@ -40,7 +40,6 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
 
-    - run: npm config set spin false
     - run: which npx
     # don't accidentally use the global npx
     - run: rm $(which npx)
