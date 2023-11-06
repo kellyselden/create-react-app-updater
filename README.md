@@ -1,7 +1,7 @@
 # create-react-app-updater
 
 [![npm version](https://badge.fury.io/js/create-react-app-updater.svg)](https://badge.fury.io/js/create-react-app-updater)
-[![Build status](https://ci.appveyor.com/api/projects/status/y8ua3584brlpcrpb/branch/master?svg=true)](https://ci.appveyor.com/project/kellyselden/create-react-app-updater/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/y8ua3584brlpcrpb/branch/main?svg=true)](https://ci.appveyor.com/project/kellyselden/create-react-app-updater/branch/main)
 
 Update [Create React App](https://facebook.github.io/create-react-app/) projects
 
