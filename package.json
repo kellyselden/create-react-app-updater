@@ -52,7 +52,7 @@
     "git-fixtures": "^8.0.0",
     "mocha": "^11.7.0",
     "mocha-helpers": "^9.0.1",
-    "renovate-config-standard": "2.1.2",
+    "renovate-config-standard": "2.2.0",
     "sinon": "^21.0.0",
     "standard-node-template": "7.0.0"
   }
