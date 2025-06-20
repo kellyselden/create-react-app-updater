@@ -22,7 +22,7 @@
   },
   "homepage": "https://gitlab.com/kellyselden/create-react-app-updater#readme",
   "engines": {
-    "node": ">=18.12"
+    "node": ">=20.9"
   },
   "files": [
     "bin",
