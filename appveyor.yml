@@ -3,7 +3,7 @@ image:
 
 environment:
   matrix:
-    - nodejs_version: "18"
+    - nodejs_version: "20"
 
     - nodejs_version: ""
   DEBUG: "create-react-app-updater,boilerplate-update,git-diff-apply"
