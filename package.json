@@ -54,6 +54,6 @@
     "mocha-helpers": "^10.0.0",
     "renovate-config-standard": "2.2.0",
     "sinon": "^21.0.0",
-    "standard-node-template": "7.0.0"
+    "standard-node-template": "7.1.0"
   }
 }
