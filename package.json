@@ -8,7 +8,7 @@
     "cra-update": "bin/index.js"
   },
   "scripts": {
-    "lint": "eslint . --ext js,json",
+    "lint": "eslint",
     "test": "mocha"
   },
   "repository": {
@@ -40,19 +40,15 @@
     "yargs": "^17.0.0"
   },
   "devDependencies": {
-    "@kellyselden/node-template": "6.5.2",
+    "@kellyselden/node-template": "6.6.1",
     "chai": "^4.5.0",
-    "eslint": "^8.57.1",
-    "eslint-config-sane": "^1.0.2",
-    "eslint-config-sane-node": "^2.0.0",
-    "eslint-plugin-json-files": "^5.1.0",
-    "eslint-plugin-mocha": "^10.5.0",
-    "eslint-plugin-n": "^17.20.0",
-    "eslint-plugin-prefer-let": "^4.0.0",
+    "eslint": "^9.34.0",
+    "eslint-config-sane-node": "^3.0.3",
+    "eslint-plugin-mocha": "^11.1.0",
     "git-fixtures": "^9.0.0",
-    "mocha": "^11.7.0",
-    "mocha-helpers": "^10.0.0",
-    "renovate-config-standard": "2.3.0",
+    "mocha": "^11.7.1",
+    "mocha-helpers": "^10.2.1",
+    "renovate-config-standard": "2.4.2",
     "sinon": "^21.0.0",
     "standard-node-template": "7.2.0"
   }
