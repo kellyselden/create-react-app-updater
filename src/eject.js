@@ -5,13 +5,13 @@ const { spawn } = require('child_process');
 
 async function eject({
   reactScriptsVersion,
-  cwd
+  cwd,
 }) {
   let ps = spawn('node', [
     'node_modules/react-scripts/bin/react-scripts.js',
-    'eject'
+    'eject',
   ], {
-    cwd
+    cwd,
   });
 
   ps.stdin.write('y\n');

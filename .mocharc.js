@@ -2,11 +2,11 @@
 
 module.exports = {
   spec: [
-    'test/**/*-test.js'
+    'test/**/*-test.js',
   ],
   ignore: [
-    'test/fixtures/**'
+    'test/fixtures/**',
   ],
 
-  retries: 2
+  retries: 2,
 };

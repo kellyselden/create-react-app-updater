@@ -13,7 +13,7 @@ module.exports = function getStartAndEndCommands({
   startTime,
   createReactAppEndVersion,
   reactScriptsEndVersion,
-  endTime
+  endTime,
 }) {
   // test
   // require('./run-sync')(['npm', 'i', `${packageName}@1.0.0`, '--no-save', '--no-package-lock']);
@@ -29,38 +29,38 @@ module.exports = function getStartAndEndCommands({
     startOptions: {
       packageVersion: createReactAppStartVersion,
       reactScriptsVersion: reactScriptsStartVersion,
-      time: startTime
+      time: startTime,
     },
     endOptions: {
       packageVersion: createReactAppEndVersion,
       reactScriptsVersion: reactScriptsEndVersion,
-      time: endTime
-    }
+      time: endTime,
+    },
   };
 };
 
 function createProjectFromCache({
   packageRoot,
-  options
+  options,
 }) {
   return async function createProject(cwd) {
     await utils.execaNode(path.join(packageRoot, 'index.js'), [
       options.projectName,
       '--scripts-version',
-      options.reactScriptsVersion
+      options.reactScriptsVersion,
     ], {
-      cwd
+      cwd,
     });
 
     return await postCreateProject({
       cwd,
-      options
+      options,
     });
   };
 }
 
 function createProjectFromRemote({
-  options
+  options,
 }) {
   return async function createProject(cwd) {
     let execa = await import('execa');
@@ -70,7 +70,7 @@ function createProjectFromRemote({
 
     return await postCreateProject({
       cwd,
-      options
+      options,
     });
   };
 }
@@ -80,15 +80,15 @@ async function postCreateProject({
   options: {
     projectName,
     projectType,
-    reactScriptsVersion
-  }
+    reactScriptsVersion,
+  },
 }) {
   let appPath = path.join(cwd, projectName);
 
   if (projectType === 'ejected') {
     await utils.eject({
       cwd: appPath,
-      reactScriptsVersion
+      reactScriptsVersion,
     });
   }
 
@@ -98,7 +98,7 @@ async function postCreateProject({
 function mutatePackageJson({
   projectType,
   reactScriptsVersion,
-  time
+  time,
 }) {
   return async function mutatePackageJson(pkg) {
     if (projectType === 'normal') {

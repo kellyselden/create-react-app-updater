@@ -5,13 +5,13 @@ const { expect } = require('../helpers/chai');
 const {
   buildTmp,
   processExit,
-  fixtureCompare: _fixtureCompare
+  fixtureCompare: _fixtureCompare,
 } = require('git-fixtures');
 const createReactAppUpdater = require('../../src');
 const {
   assertNormalUpdate,
   assertNoUnstaged,
-  assertNoStaged
+  assertNoStaged,
 } = require('../helpers/assertions');
 
 describe(function() {
@@ -29,12 +29,12 @@ describe(function() {
     statsOnly,
     runCodemods,
     listCodemods,
-    commitMessage
+    commitMessage,
   }) {
     tmpPath = await buildTmp({
       fixturesPath,
       commitMessage,
-      dirty
+      dirty,
     });
 
     let promise = createReactAppUpdater({
@@ -45,19 +45,19 @@ describe(function() {
       compareOnly,
       statsOnly,
       runCodemods,
-      listCodemods
+      listCodemods,
     });
 
     return await processExit({
       promise,
       cwd: tmpPath,
       commitMessage,
-      expect
+      expect,
     });
   }
 
   function fixtureCompare({
-    mergeFixtures
+    mergeFixtures,
   }) {
     let actual = tmpPath;
     let expected = mergeFixtures;
@@ -65,7 +65,7 @@ describe(function() {
     _fixtureCompare({
       expect,
       actual,
-      expected
+      expected,
     });
   }
 
@@ -73,15 +73,15 @@ describe(function() {
     this.timeout(60e3);
 
     let {
-      status
+      status,
     } = await merge({
       fixturesPath: 'test/fixtures/normal/local',
       commitMessage: 'my-app',
-      reset: true
+      reset: true,
     });
 
     fixtureCompare({
-      mergeFixtures: 'test/fixtures/normal/reset/my-app'
+      mergeFixtures: 'test/fixtures/normal/reset/my-app',
     });
 
     expect(status).to.match(/^\?{2} src\/serviceWorker\.js$/m);
@@ -91,13 +91,13 @@ describe(function() {
 
   it('resolves semver ranges', async function() {
     let {
-      result
+      result,
     } = await merge({
       fixturesPath: 'test/fixtures/normal/local',
       commitMessage: 'my-app',
       from: '< 1',
       to: '2.0.*',
-      statsOnly: true
+      statsOnly: true,
     });
 
     expect(result).to.include(`
@@ -108,11 +108,11 @@ to version: 2.0.4`);
   it('shows stats only', async function() {
     let {
       result,
-      status
+      status,
     } = await merge({
       fixturesPath: 'test/fixtures/normal/local',
       commitMessage: 'my-app',
-      statsOnly: true
+      statsOnly: true,
     });
 
     assertNoStaged(status);
@@ -127,11 +127,11 @@ applicable codemods: create-element-to-jsx`);
   it('lists codemods', async function() {
     let {
       result,
-      status
+      status,
     } = await merge({
       fixturesPath: 'test/fixtures/normal/local',
       commitMessage: 'my-app',
-      listCodemods: true
+      listCodemods: true,
     });
 
     assertNoStaged(status);
@@ -143,14 +143,14 @@ applicable codemods: create-element-to-jsx`);
     this.timeout(3 * 60e3);
 
     let {
-      status
+      status,
     } = await merge({
       fixturesPath: 'test/fixtures/ejected/local',
-      commitMessage: 'my-app'
+      commitMessage: 'my-app',
     });
 
     fixtureCompare({
-      mergeFixtures: 'test/fixtures/ejected/merge/my-app'
+      mergeFixtures: 'test/fixtures/ejected/merge/my-app',
     });
 
     assertNormalUpdate(status);

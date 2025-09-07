@@ -17,8 +17,8 @@ describe(getProjectType, function() {
     it('detects normal app', function() {
       let packageJson = {
         dependencies: {
-          'react-scripts': '2.11'
-        }
+          'react-scripts': '2.11',
+        },
       };
 
       expect(getProjectType(packageJson)).to.equal('normal');
@@ -27,8 +27,8 @@ describe(getProjectType, function() {
     it('detects normal app with empty string', function() {
       let packageJson = {
         dependencies: {
-          'react-scripts': ''
-        }
+          'react-scripts': '',
+        },
       };
 
       expect(getProjectType(packageJson)).to.equal('normal');
@@ -37,8 +37,8 @@ describe(getProjectType, function() {
     it('detects ejected app', function() {
       let packageJson = {
         dependencies: {
-          'react-dev-utils': '2.11'
-        }
+          'react-dev-utils': '2.11',
+        },
       };
 
       expect(getProjectType(packageJson)).to.equal('ejected');
@@ -47,8 +47,8 @@ describe(getProjectType, function() {
     it('detects ejected app with empty string', function() {
       let packageJson = {
         dependencies: {
-          'react-dev-utils': ''
-        }
+          'react-dev-utils': '',
+        },
       };
 
       expect(getProjectType(packageJson)).to.equal('ejected');
@@ -59,8 +59,8 @@ describe(getProjectType, function() {
     it('detects normal app', function() {
       let packageJson = {
         devDependencies: {
-          'react-scripts': '2.11'
-        }
+          'react-scripts': '2.11',
+        },
       };
 
       expect(getProjectType(packageJson)).to.equal('normal');
@@ -69,8 +69,8 @@ describe(getProjectType, function() {
     it('detects normal app with empty string', function() {
       let packageJson = {
         devDependencies: {
-          'react-scripts': ''
-        }
+          'react-scripts': '',
+        },
       };
 
       expect(getProjectType(packageJson)).to.equal('normal');
@@ -79,8 +79,8 @@ describe(getProjectType, function() {
     it('detects ejected app', function() {
       let packageJson = {
         devDependencies: {
-          'react-dev-utils': '2.11'
-        }
+          'react-dev-utils': '2.11',
+        },
       };
 
       expect(getProjectType(packageJson)).to.equal('ejected');
@@ -89,8 +89,8 @@ describe(getProjectType, function() {
     it('detects ejected app with empty string', function() {
       let packageJson = {
         devDependencies: {
-          'react-dev-utils': ''
-        }
+          'react-dev-utils': '',
+        },
       };
 
       expect(getProjectType(packageJson)).to.equal('ejected');
