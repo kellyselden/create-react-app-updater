@@ -2,7 +2,7 @@
 
 module.exports = function getProjectType({
   dependencies,
-  devDependencies
+  devDependencies,
 }) {
   function checkForDep(packageName) {
     return allDeps[packageName] !== undefined;

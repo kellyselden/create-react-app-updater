@@ -21,7 +21,7 @@ module.exports = async function createReactAppUpdater({
   runCodemods,
   reset,
   statsOnly,
-  listCodemods
+  listCodemods,
 }) {
   return await (await boilerplateUpdate({
     cwd,
@@ -35,14 +35,14 @@ module.exports = async function createReactAppUpdater({
     createCustomDiff: true,
     mergeOptions: async function mergeOptions({
       packageJson,
-      projectOptions: [projectType]
+      projectOptions: [projectType],
     }) {
       let [
         createReactAppTimes,
-        reactScriptsTimes
+        reactScriptsTimes,
       ] = await Promise.all([
         getTimes('create-react-app'),
-        getTimes('react-scripts')
+        getTimes('react-scripts'),
       ]);
 
       let createReactAppVersions = Object.keys(createReactAppTimes);
@@ -60,7 +60,7 @@ module.exports = async function createReactAppUpdater({
         } else {
           let {
             'create-react-app': createReactAppVersion,
-            'react-scripts': reactScriptsVersion
+            'react-scripts': reactScriptsVersion,
           } = await getPackageVersions(packageJson, projectType);
 
           startVersion = createReactAppVersion;
@@ -84,9 +84,9 @@ module.exports = async function createReactAppUpdater({
           startTime,
           createReactAppEndVersion: endVersion,
           reactScriptsEndVersion,
-          endTime
-        })
+          endTime,
+        }),
       };
-    }
+    },
   })).promise;
 };

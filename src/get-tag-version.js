@@ -11,8 +11,8 @@ module.exports = function getTagVersion(versions) {
       distTags: [
         'latest',
         'next',
-        'canary'
-      ]
+        'canary',
+      ],
     });
   };
 };

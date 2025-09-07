@@ -11,7 +11,7 @@ async function crawl({
   childVersions,
   childVersion,
   parentPackageName,
-  childPackageName
+  childPackageName,
 }) {
   let parentVersion;
 
@@ -62,14 +62,14 @@ async function crawl({
 
 module.exports = async function getPackageVersion({
   dependencies,
-  devDependencies
+  devDependencies,
 }, projectType) {
   let [
     createReactAppTimes,
-    reactScriptsTimes
+    reactScriptsTimes,
   ] = await Promise.all([
     getTimes('create-react-app'),
-    getTimes('react-scripts')
+    getTimes('react-scripts'),
   ]);
 
   let reactScriptsVersions = Object.keys(reactScriptsTimes);
@@ -88,7 +88,7 @@ module.exports = async function getPackageVersion({
       childVersions: reactDevUtilsVersions,
       childVersion: reactDevUtilsVersion,
       parentPackageName: 'react-scripts',
-      childPackageName: 'react-dev-utils'
+      childPackageName: 'react-dev-utils',
     });
   } else {
     reactScriptsVersion = semver.minSatisfying(reactScriptsVersions, allDeps['react-scripts']);
@@ -108,6 +108,6 @@ module.exports = async function getPackageVersion({
 
   return {
     'create-react-app': createReactAppVersion,
-    'react-scripts': reactScriptsVersion
+    'react-scripts': reactScriptsVersion,
   };
 };

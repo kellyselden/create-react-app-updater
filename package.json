@@ -2,32 +2,29 @@
   "name": "create-react-app-updater",
   "version": "1.3.0",
   "description": "Update Create React App projects",
-  "main": "src",
-  "bin": {
-    "create-react-app-updater": "bin/index.js",
-    "cra-update": "bin/index.js"
-  },
-  "scripts": {
-    "lint": "eslint . --ext js,json",
-    "test": "mocha"
+  "homepage": "https://gitlab.com/kellyselden/create-react-app-updater#readme",
+  "bugs": {
+    "url": "https://gitlab.com/kellyselden/create-react-app-updater/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@gitlab.com/kellyselden/create-react-app-updater.git"
   },
-  "author": "Kelly Selden",
   "license": "MIT",
-  "bugs": {
-    "url": "https://gitlab.com/kellyselden/create-react-app-updater/issues"
-  },
-  "homepage": "https://gitlab.com/kellyselden/create-react-app-updater#readme",
-  "engines": {
-    "node": ">=20.9"
+  "author": "Kelly Selden",
+  "main": "src",
+  "bin": {
+    "cra-update": "bin/index.js",
+    "create-react-app-updater": "bin/index.js"
   },
   "files": [
     "bin",
     "src"
   ],
+  "scripts": {
+    "lint": "eslint",
+    "test": "mocha"
+  },
   "dependencies": {
     "boilerplate-update": "^6.0.0",
     "debug": "^4.1.1",
@@ -42,18 +39,17 @@
   "devDependencies": {
     "@kellyselden/node-template": "6.9.0",
     "chai": "^4.5.0",
-    "eslint": "^8.57.1",
-    "eslint-config-sane": "^1.0.2",
-    "eslint-config-sane-node": "^2.0.0",
-    "eslint-plugin-json-files": "^5.1.0",
+    "eslint": "^9.34.0",
+    "eslint-config-sane-node": "^6.0.0",
     "eslint-plugin-mocha": "^10.5.0",
-    "eslint-plugin-n": "^17.20.0",
-    "eslint-plugin-prefer-let": "^4.0.0",
     "git-fixtures": "^9.0.0",
-    "mocha": "^11.7.0",
-    "mocha-helpers": "^10.0.0",
-    "renovate-config-standard": "2.3.0",
+    "mocha": "^11.7.1",
+    "mocha-helpers": "^10.2.1",
+    "renovate-config-standard": "2.4.2",
     "sinon": "^21.0.0",
     "standard-node-template": "7.2.0"
+  },
+  "engines": {
+    "node": ">=20.9"
   }
 }

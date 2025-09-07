@@ -45,7 +45,7 @@ describe(_getStartAndEndCommands, function() {
       startTime,
       createReactAppEndVersion,
       reactScriptsEndVersion,
-      endTime
+      endTime,
     }, options));
   }
 
@@ -67,13 +67,13 @@ describe(_getStartAndEndCommands, function() {
       startOptions: {
         packageVersion: createReactAppStartVersion,
         reactScriptsVersion: reactScriptsStartVersion,
-        time: startTime
+        time: startTime,
       },
       endOptions: {
         packageVersion: createReactAppEndVersion,
         reactScriptsVersion: reactScriptsEndVersion,
-        time: endTime
-      }
+        time: endTime,
+      },
     });
   });
 
@@ -84,8 +84,8 @@ describe(_getStartAndEndCommands, function() {
       packageRoot,
       options: {
         projectName,
-        reactScriptsVersion
-      }
+        reactScriptsVersion,
+      },
     });
 
     expect(await createProject(cwd)).to.equal(projectPath);
@@ -95,11 +95,11 @@ describe(_getStartAndEndCommands, function() {
       [
         projectName,
         '--scripts-version',
-        reactScriptsStartVersion
+        reactScriptsStartVersion,
       ],
       {
-        cwd
-      }
+        cwd,
+      },
     ]]);
   });
 
@@ -110,8 +110,8 @@ describe(_getStartAndEndCommands, function() {
       options: {
         projectName,
         packageVersion,
-        reactScriptsVersion
-      }
+        reactScriptsVersion,
+      },
     });
 
     expect(await createProject(cwd)).to.equal(projectPath);
@@ -121,11 +121,11 @@ describe(_getStartAndEndCommands, function() {
         `${packageName}@${packageVersion}`,
         projectName,
         '--scripts-version',
-        reactScriptsStartVersion
+        reactScriptsStartVersion,
       ],
       {
-        cwd
-      }
+        cwd,
+      },
     ]]);
   });
 
@@ -133,7 +133,7 @@ describe(_getStartAndEndCommands, function() {
     let projectType = 'ejected';
 
     let options = getStartAndEndCommands({
-      projectType
+      projectType,
     });
 
     expect(options.projectType).to.equal(projectType);
@@ -143,8 +143,8 @@ describe(_getStartAndEndCommands, function() {
       options: {
         projectName,
         projectType,
-        reactScriptsVersion
-      }
+        reactScriptsVersion,
+      },
     });
 
     expect(await createProject(cwd)).to.equal(projectPath);
@@ -152,8 +152,8 @@ describe(_getStartAndEndCommands, function() {
     expect(ejectStub.args).to.deep.equal([[
       {
         cwd: projectPath,
-        reactScriptsVersion
-      }
+        reactScriptsVersion,
+      },
     ]]);
   });
 });

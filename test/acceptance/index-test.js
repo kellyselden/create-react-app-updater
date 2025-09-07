@@ -5,12 +5,12 @@ const { expect } = require('../helpers/chai');
 const {
   buildTmp,
   processBin,
-  fixtureCompare: _fixtureCompare
+  fixtureCompare: _fixtureCompare,
 } = require('git-fixtures');
 const {
   assertNormalUpdate,
   assertNoUnstaged,
-  assertCodemodRan
+  assertCodemodRan,
 } = require('../helpers/assertions');
 
 describe(function() {
@@ -22,20 +22,20 @@ describe(function() {
     fixturesPath,
     runCodemods,
     subDir = '',
-    commitMessage
+    commitMessage,
   }) {
     tmpPath = await buildTmp({
       fixturesPath,
       commitMessage,
-      subDir
+      subDir,
     });
 
     let args = [
-      '--to=2.1.1'
+      '--to=2.1.1',
     ];
     if (runCodemods) {
       args = [
-        '--run-codemods'
+        '--run-codemods',
       ];
     }
 
@@ -44,12 +44,12 @@ describe(function() {
       args,
       cwd: tmpPath,
       commitMessage,
-      expect
+      expect,
     });
   }
 
   function fixtureCompare({
-    mergeFixtures
+    mergeFixtures,
   }) {
     let actual = tmpPath;
     let expected = mergeFixtures;
@@ -57,20 +57,20 @@ describe(function() {
     _fixtureCompare({
       expect,
       actual,
-      expected
+      expected,
     });
   }
 
   it('works', async function() {
     let {
-      status
+      status,
     } = await (await merge({
       fixturesPath: 'test/fixtures/normal/local',
-      commitMessage: 'my-app'
+      commitMessage: 'my-app',
     })).promise;
 
     fixtureCompare({
-      mergeFixtures: 'test/fixtures/normal/merge/my-app'
+      mergeFixtures: 'test/fixtures/normal/merge/my-app',
     });
 
     assertNormalUpdate(status);
@@ -80,11 +80,11 @@ describe(function() {
   it('runs codemods', async function() {
     let {
       ps,
-      promise
+      promise,
     } = await merge({
       fixturesPath: 'test/fixtures/codemod/before',
       commitMessage: 'my-app',
-      runCodemods: true
+      runCodemods: true,
     });
 
     ps.stdout.on('data', data => {
@@ -95,7 +95,7 @@ describe(function() {
     });
 
     let {
-      status
+      status,
     } = await promise;
 
     // file is indeterminent between OS's, so ignore
@@ -107,7 +107,7 @@ describe(function() {
     }
 
     fixtureCompare({
-      mergeFixtures
+      mergeFixtures,
     });
 
     assertNoUnstaged(status);
