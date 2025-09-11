@@ -14,11 +14,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v5
+
     - uses: actions/setup-node@v5
       with:
         node-version: 20
 
     - run: npm ci
+
     - run: npm run lint
 
   test:
@@ -37,6 +39,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v5
+
     - uses: actions/setup-node@v5
       with:
         node-version: ${{ matrix.node }}
@@ -50,6 +53,7 @@ jobs:
     - run: "! which npx"
 
     - run: npm ci
+
     - run: npm test
       env:
         DEBUG: create-react-app-updater,boilerplate-update,git-diff-apply
@@ -65,6 +69,7 @@ jobs:
       with:
         ref: ${{ github.head_ref }}
         token: ${{ secrets.GitHubToken }}
+
     - uses: actions/setup-node@v5
       with:
         node-version: 20
