@@ -39,7 +39,7 @@
   "devDependencies": {
     "@kellyselden/eslint-config": "^1.0.0",
     "@kellyselden/node-template": "6.11.1",
-    "chai": "^4.5.0",
+    "chai": "^6.0.0",
     "eslint": "^9.34.0",
     "git-fixtures": "^9.0.0",
     "mocha": "^11.7.1",
