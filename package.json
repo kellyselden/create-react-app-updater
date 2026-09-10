@@ -2,13 +2,13 @@
   "name": "create-react-app-updater",
   "version": "2.0.0",
   "description": "Update Create React App projects",
-  "homepage": "https://gitlab.com/kellyselden/create-react-app-updater#readme",
+  "homepage": "https://github.com/kellyselden/create-react-app-updater#readme",
   "bugs": {
-    "url": "https://gitlab.com/kellyselden/create-react-app-updater/issues"
+    "url": "https://github.com/kellyselden/create-react-app-updater/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gitlab.com/kellyselden/create-react-app-updater.git"
+    "url": "git+ssh://git@github.com/kellyselden/create-react-app-updater.git"
   },
   "license": "MIT",
   "author": "Kelly Selden",
