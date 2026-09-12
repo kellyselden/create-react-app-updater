@@ -26,7 +26,7 @@
     "test": "mocha"
   },
   "dependencies": {
-    "boilerplate-update": "^6.0.0",
+    "boilerplate-update": "^7.0.0",
     "debug": "^4.1.1",
     "execa": "^9.0.0",
     "npm": "^11.0.0",
